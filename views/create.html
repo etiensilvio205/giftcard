@@ -10,19 +10,21 @@
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
             font-family: Arial, sans-serif;
             margin: 0;
             padding: 0;
+            position: relative;
         }
         #gift-card {
             width: 100vw;
             height: 100vh;
-            max-width: 400px;
-            max-height: 700px;
-            background: url('background2.jpeg') no-repeat center center;
-            background-size: contain;
+            background: url('background2.jpg') no-repeat center center;
+            background-size: cover;
             position: relative;
-            border: 2px solid #000;
         }
         .draggable {
             position: absolute;
@@ -31,94 +33,88 @@
             padding: 5px;
             border-radius: 5px;
         }
-        input {
-            margin: 5px;
-            width: 90%;
+        #popup-form {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+            z-index: 1000;
+            width: 80%;
+            max-width: 300px;
         }
-        button {
-            margin-top: 10px;
+        #popup-form input {
+            width: 100%;
+            margin-bottom: 10px;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        #popup-form button {
+            width: 100%;
             padding: 10px;
-            width: 90%;
+            background: violet;
+            border: none;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .close-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+        }
+        #open-form-btn {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: violet;
+            color: white;
+            padding: 15px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            font-size: 20px;
         }
     </style>
 </head>
 <body>
-    <h2>Gift Card Generator</h2>
-    <input type="text" id="name" placeholder="Recipient Name" oninput="updateText('name-text', this.value)">
-    <input type="text" id="date" placeholder="Expiration Date" oninput="updateText('date-text', this.value)">
-    <input type="text" id="giver" placeholder="From" oninput="updateText('giver-text', this.value)">
-    
     <div id="gift-card">
         <div id="name-text" class="draggable" style="top: 10%; left: 10%;">Recipient Name</div>
         <div id="date-text" class="draggable" style="top: 50%; left: 10%;">Expiration Date</div>
         <div id="giver-text" class="draggable" style="top: 80%; left: 10%;">From</div>
     </div>
     
-    <button onclick="captureAndShare()">Share via WhatsApp</button>
+    <button id="open-form-btn" onclick="showForm()">+</button>
+    
+    <div id="popup-form">
+        <span class="close-btn" onclick="closeForm()">&times;</span>
+        <h3>Enter Gift Details</h3>
+        <input type="text" id="name" placeholder="Recipient Name" oninput="updateText('name-text', this.value)">
+        <input type="text" id="date" placeholder="Expiration Date" oninput="updateText('date-text', this.value)">
+        <input type="text" id="giver" placeholder="From" oninput="updateText('giver-text', this.value)">
+        <button onclick="closeForm()">Save</button>
+    </div>
     
     <script>
         function updateText(id, value) {
             document.getElementById(id).textContent = value;
         }
 
-        function captureAndShare() {
-            const giftCard = document.getElementById('gift-card');
-            html2canvas(giftCard).then(canvas => {
-                const imageData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = imageData;
-                link.download = 'gift-card.png';
-                link.click();
-
-                const blob = dataURItoBlob(imageData);
-                if (navigator.share) {
-                    navigator.share({
-                        files: [new File([blob], 'gift-card.png', { type: 'image/png' })],
-                        title: 'Gift Card',
-                        text: 'Here is your gift card!',
-                    });
-                } else {
-                    alert('Sharing not supported on this device. Please download the image and share manually.');
-                }
-            });
+        function showForm() {
+            document.getElementById('popup-form').style.display = 'block';
         }
 
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([ab], { type: mimeString });
+        function closeForm() {
+            document.getElementById('popup-form').style.display = 'none';
         }
-
-        document.querySelectorAll('.draggable').forEach(el => {
-            el.addEventListener('mousedown', function(e) {
-                let shiftX = e.clientX - el.getBoundingClientRect().left;
-                let shiftY = e.clientY - el.getBoundingClientRect().top;
-                
-                function moveAt(pageX, pageY) {
-                    el.style.left = pageX - shiftX + 'px';
-                    el.style.top = pageY - shiftY + 'px';
-                }
-                
-                function onMouseMove(event) {
-                    moveAt(event.pageX, event.pageY);
-                }
-                
-                document.addEventListener('mousemove', onMouseMove);
-                
-                el.onmouseup = function() {
-                    document.removeEventListener('mousemove', onMouseMove);
-                    el.onmouseup = null;
-                };
-            });
-            el.ondragstart = function() {
-                return false;
-            };
-        });
     </script>
 </body>
 </html>
