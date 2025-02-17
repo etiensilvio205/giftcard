@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #f0f0f0;
+        }
+        .top-image-container {
+            text-align: center;
+            margin-bottom: 50px; /* Adjust spacing as needed */
+        }
+        .top-image {
+            max-width: 50%;
+            height: auto;
+        }
+        .button-container {
+            text-align: center;
+        }
+        .button {
+            margin: 10px;
+            padding: 15px 30px;
+            font-size: 18px;
+            background-color: red;
+            color: black;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .button:hover {
+            background-color: red;
+        }
+    </style>
+</head>
+<body>
+    <div class="top-image-container">
+        <img class="top-image" src="coupon.png" alt="Top Image">
+    </div>
+
+    <div class="button-container">
+        <button class="button" onclick='location.href = "/create"'>Créer coupon</button>
+        <button class="button" onclick='location.href = "/scan"'>Valider Coupon</button>
+    </div>
+
+    <script>
+        function createCoupon() {
+            window.location.href = "create.html";
+        }
+
+        function scanCoupon() {
+            window.location.href = "scan.html";
+        }
+    </script>
+</body>
+</html>

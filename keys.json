@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "coupons-414222",
+  "private_key_id": "9e31b4b08f3faf1d5e3f34745d860397e99df767",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCUnORKILAD9cb/\nPzEFfjiXPFwH7SCNfsHWg3Gnp4D3GLOxVlwuEYJ1y8NaIgaIYCvG+sLFP2ux8gj3\nesZHIoNTU/QgAkLVNfb0SVl3rFRp+Q+9Y+DlB+9rx5mf3+Vx4wbJKvvgXis2T091\nbIW1UFhgIixsGQRn1QchXW4uAChZ29zjkZWgxne/oGnlbOVdfcPAhlknOv91nycj\nrw8L5sVsJvix4qjjk3chmySPOOnki74PqstD+T0PbzPJQzZNfws6z6ynCb8Mh1GT\nWhNZvfFUanOM+d5oshs+yRQ71INcH9I/PnWBSh3AnPwPAd+JSNBq7G6nXHHzHoce\n4dRjB6vdAgMBAAECggEACUEDb9XnvU4OEWxXqtzQfM21JF2LcqF4mVk6LU3/TZkD\n7XsaxoKax1IuzLDENont3ULVoy80ZKeqj8XdIrup26Pla83Vkrhnc5A9X41DUg2r\nLChT7icSQqRH8xOKfSQ9fVmCxtajpbWGwDbc/5dByDYF4p2khNZYI+d7uiZn3NUn\n7UaZkxDEeh4aO7rA1yPPzAgoN3xnsomft+V+lSFeQIClf+jYB1l9ewypvBjwBAyO\nckyIPC2jxFdRhaEipjelkt5Anh8JYiciyAwMTfwm9J89iy3ZLikDqdqJlxjPE2Zw\n1cy/7MM7xJN3bVZ5VHz/XzrN1uuu1yKGg1AK0UKdYQKBgQDQA80ifTgGNZZSgVE0\n9iUmJctGJq/mOQDUFIu/o/JTDBuPhQl25nWnKbzO+XkHZJTWsuLua0jKcMbzngm/\nr2Xnma1WOfUZqsO3D1KAWoiZPKbd6ubV+WEuEPdpHdK4ghEmS5zaSUoNB5FdHCQC\nDoyNx+hBeby9D0Ea0RwFve5gvQKBgQC25SPAtgm6aekyxJrfLnyUhKsCjBNawKGi\nFU8OUJiMSotvKZiiHQ5JYbEhFsK/YxPZY0D5I/7Gq4ha9VAfhQNr1PX6Ksuwh+iW\nbpYWYopX1yOGwqzTqsSGTvRbYgYxkjat5vRMPq/V71cOArJfIDmxyX7307vwqct+\nXro9qOn5oQKBgFTDB8bjAX4+PcfW3BFZr5+QzPkD8K8+USEaUivAEZFXoK9lxYqG\ntDBuqHoqW+/wQ1oNQL1oSBv9woQoxM4wGbU7AM/fBAn2dJPWkYat3XWbql9JRdCx\nMrFDxp01wtTeY0CYlQy5yovupoQrYFzaMtnfOLvdcFQVsDDOPr30O/t9AoGBAJNF\nh7iR3NuClQkQTzUPlblx6tIuQRd+rah6SCJau7ub+xMUB5filbJ5O8xNK5w5B66w\nwYzcczc+wJmdl1sKHGskHL3I4CPSDHO1sJ1t08BPuIe3EruOcplD0ngTQrF/7w+x\nPV53y9cU1qCtgzweEtcaTWb51AhCcV3coVMtRNqBAoGAdLxOrXJUnFn+kasJ42Ns\nVsmCXbmTp9QL9QVqRrEMbecy0YqmeLCOhP5JgCH+VoKwZRG7HWJ6ak7kctAX4cuc\nwwEjB8yapocAhluiFvfHJJEpQr99W9zhz+Eo3vwAq0wSirvP4sS3RfxGcCxyrAj/\nYpJfX/POXti8FLhJY7mQXUc=\n-----END PRIVATE KEY-----\n",
+  "client_email": "service-icc@coupons-414222.iam.gserviceaccount.com",
+  "client_id": "113498053066015190310",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/service-icc%40coupons-414222.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
