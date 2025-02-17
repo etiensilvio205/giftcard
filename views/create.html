@@ -11,12 +11,16 @@
             flex-direction: column;
             align-items: center;
             font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
         }
         #gift-card {
-            width: 300px;
-            height: 200px;
-            background: url('https://background2.jpg') no-repeat center center;
-            background-size: cover;
+            width: 100vw;
+            height: 100vh;
+            max-width: 400px;
+            max-height: 700px;
+            background: url('background2.jpeg') no-repeat center center;
+            background-size: contain;
             position: relative;
             border: 2px solid #000;
         }
@@ -29,10 +33,12 @@
         }
         input {
             margin: 5px;
+            width: 90%;
         }
         button {
             margin-top: 10px;
-            padding: 5px 10px;
+            padding: 10px;
+            width: 90%;
         }
     </style>
 </head>
@@ -43,9 +49,9 @@
     <input type="text" id="giver" placeholder="From" oninput="updateText('giver-text', this.value)">
     
     <div id="gift-card">
-        <div id="name-text" class="draggable" style="top: 20px; left: 20px;">Recipient Name</div>
-        <div id="date-text" class="draggable" style="top: 80px; left: 20px;">Expiration Date</div>
-        <div id="giver-text" class="draggable" style="top: 140px; left: 20px;">From</div>
+        <div id="name-text" class="draggable" style="top: 10%; left: 10%;">Recipient Name</div>
+        <div id="date-text" class="draggable" style="top: 50%; left: 10%;">Expiration Date</div>
+        <div id="giver-text" class="draggable" style="top: 80%; left: 10%;">From</div>
     </div>
     
     <button onclick="captureAndShare()">Share via WhatsApp</button>
@@ -64,10 +70,7 @@
                 link.download = 'gift-card.png';
                 link.click();
 
-                // Create a blob URL for sharing
                 const blob = dataURItoBlob(imageData);
-                const blobUrl = URL.createObjectURL(blob);
-                
                 if (navigator.share) {
                     navigator.share({
                         files: [new File([blob], 'gift-card.png', { type: 'image/png' })],
@@ -91,7 +94,6 @@
             return new Blob([ab], { type: mimeString });
         }
 
-        // Make text draggable
         document.querySelectorAll('.draggable').forEach(el => {
             el.addEventListener('mousedown', function(e) {
                 let shiftX = e.clientX - el.getBoundingClientRect().left;
@@ -113,7 +115,6 @@
                     el.onmouseup = null;
                 };
             });
-
             el.ondragstart = function() {
                 return false;
             };
