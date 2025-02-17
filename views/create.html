@@ -23,7 +23,7 @@
             width: 100vw;
             height: 100vh;
             background: url('background2.jpg') no-repeat center center;
-            background-size: cover;
+            background-size: contain;
             position: relative;
         }
         .draggable {
@@ -120,7 +120,7 @@
 
         function captureAndShare() {
             const giftCard = document.getElementById('gift-card');
-            html2canvas(giftCard).then(canvas => {
+            html2canvas(giftCard, { scale: 2, useCORS: true }).then(canvas => {
                 const imageData = canvas.toDataURL('image/png');
                 const link = document.createElement('a');
                 link.href = imageData;
