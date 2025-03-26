@@ -47,16 +47,16 @@ app.use(cookieParser());
 //app.use('/scan',scancoupon);
 
 app.get('/', function(req, res) {
-  res.sendFile(__dirname+'/views/menu.html');
-});
-
-app.get('/create', function(req, res) {
   res.sendFile(__dirname+'/views/create.html');
 });
 
-app.get('/scan', function(req, res) {
-  res.sendFile(__dirname+'/views/scan.html');
-});
+//app.get('/create', function(req, res) {
+//  res.sendFile(__dirname+'/views/create.html');
+//});
+
+//app.get('/scan', function(req, res) {
+//  res.sendFile(__dirname+'/views/scan.html');
+//});
 
 
 
