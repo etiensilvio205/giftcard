@@ -13,6 +13,7 @@
             height: 100vh;
             font-family: 'Poppins', sans-serif;
             background-color: #f4f4f4;
+            position: relative;
         }
         button {
             padding: 10px 20px;
@@ -28,12 +29,16 @@
             background-color: #0056b3;
         }
         #form-container {
-            display: none;
-            background: white;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.9);
             padding: 20px;
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
+            display: none;
         }
         input {
             display: block;
@@ -140,35 +145,14 @@
             ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
             
             const imageUrl = canvas.toDataURL("image/png", 1.0);
-            
-            if (callback) {
-                callback(imageUrl);
-            } else {
-                const link = document.createElement('a');
-                link.download = 'gift-card.png';
-                link.href = imageUrl;
-                link.click();
-            }
+            callback(imageUrl);
         }
         
         function shareOnWhatsApp() {
             saveCard(function(imageUrl) {
-                const blob = dataURItoBlob(imageUrl);
-                const file = new File([blob], "gift-card.png", { type: "image/png" });
-                const whatsappUrl = `https://api.whatsapp.com/send?text=Check out this gift card!`;
+                const whatsappUrl = `https://api.whatsapp.com/send?text=Check out this gift card!&media=${encodeURIComponent(imageUrl)}`;
                 window.open(whatsappUrl, '_blank');
             });
-        }
-        
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const arrayBuffer = new ArrayBuffer(byteString.length);
-            const uintArray = new Uint8Array(arrayBuffer);
-            for (let i = 0; i < byteString.length; i++) {
-                uintArray[i] = byteString.charCodeAt(i);
-            }
-            return new Blob([arrayBuffer], { type: mimeString });
         }
     </script>
 </body>
