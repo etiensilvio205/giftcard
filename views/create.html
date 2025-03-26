@@ -39,6 +39,7 @@
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
             display: none;
+            z-index: 10;
         }
         input {
             display: block;
@@ -144,14 +145,28 @@
             ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
             ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
             
-            const imageUrl = canvas.toDataURL("image/png", 1.0);
-            callback(imageUrl);
+            canvas.toBlob(function(blob) {
+                const file = new File([blob], "gift-card.png", { type: "image/png" });
+                callback(file);
+            }, "image/png");
         }
         
         function shareOnWhatsApp() {
-            saveCard(function(imageUrl) {
-                const whatsappUrl = `https://api.whatsapp.com/send?text=Check out this gift card!&media=${encodeURIComponent(imageUrl)}`;
-                window.open(whatsappUrl, '_blank');
+            saveCard(function(file) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.files = dataTransfer.files;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        files: input.files,
+                        text: "Check out this gift card!"
+                    }).catch(console.error);
+                } else {
+                    alert("Your browser does not support direct WhatsApp image sharing.");
+                }
             });
         }
     </script>
