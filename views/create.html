@@ -45,10 +45,13 @@
         }
         #card-container {
             position: relative;
-            width: 300px;
-            height: 450px;
+            width: 100%;
+            max-width: 300px;
+            height: auto;
+            aspect-ratio: 2/3;
             background-image: url('background2.jpg');
-            background-size: cover;
+            background-size: contain;
+            background-repeat: no-repeat;
             background-position: center;
             display: flex;
             align-items: center;
@@ -87,7 +90,7 @@
         <div class="overlay-text" id="gifter"></div>
     </div>
     <canvas id="cardCanvas"></canvas>
-    <button onclick="saveCard()">Save & Share</button>
+    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
 
     <script>
         let bgImage = new Image();
@@ -120,7 +123,7 @@
             document.getElementById('form-container').style.display = 'none';
         }
         
-        function saveCard() {
+        function saveCard(callback) {
             const canvas = document.getElementById('cardCanvas');
             const ctx = canvas.getContext('2d');
             canvas.width = 600;
@@ -136,10 +139,36 @@
             ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
             ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
             
-            const link = document.createElement('a');
-            link.download = 'gift-card.png';
-            link.href = canvas.toDataURL("image/png", 1.0);
-            link.click();
+            const imageUrl = canvas.toDataURL("image/png", 1.0);
+            
+            if (callback) {
+                callback(imageUrl);
+            } else {
+                const link = document.createElement('a');
+                link.download = 'gift-card.png';
+                link.href = imageUrl;
+                link.click();
+            }
+        }
+        
+        function shareOnWhatsApp() {
+            saveCard(function(imageUrl) {
+                const blob = dataURItoBlob(imageUrl);
+                const file = new File([blob], "gift-card.png", { type: "image/png" });
+                const whatsappUrl = `https://api.whatsapp.com/send?text=Check out this gift card!`;
+                window.open(whatsappUrl, '_blank');
+            });
+        }
+        
+        function dataURItoBlob(dataURI) {
+            const byteString = atob(dataURI.split(',')[1]);
+            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
+            const arrayBuffer = new ArrayBuffer(byteString.length);
+            const uintArray = new Uint8Array(arrayBuffer);
+            for (let i = 0; i < byteString.length; i++) {
+                uintArray[i] = byteString.charCodeAt(i);
+            }
+            return new Blob([arrayBuffer], { type: mimeString });
         }
     </script>
 </body>
