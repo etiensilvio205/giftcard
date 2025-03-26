@@ -16,9 +16,9 @@
             position: relative;
         }
         button {
-            padding: 10px 20px;
-            font-size: 16px;
-            background-color: #007BFF;
+            padding: 8.5px 17px;
+            font-size: 13.6px;
+            background-color: #a22a9b;
             color: white;
             border: none;
             border-radius: 5px;
@@ -26,7 +26,7 @@
             margin: 10px;
         }
         button:hover {
-            background-color: #0056b3;
+            background-color: #871f7d;
         }
         #form-container {
             position: absolute;
@@ -40,14 +40,17 @@
             text-align: center;
             display: none;
             z-index: 10;
+            width: 80%;
+            max-width: 300px;
         }
         input {
             display: block;
-            width: 100%;
+            width: 90%;
             padding: 10px;
-            margin: 10px 0;
+            margin: 10px auto;
             border: 1px solid #ccc;
             border-radius: 5px;
+            text-align: center;
         }
         #card-container {
             position: relative;
@@ -107,6 +110,13 @@
         
         function showForm() {
             document.getElementById('form-container').style.display = 'block';
+            
+            let expiryInput = document.getElementById('expiry-input');
+            if (!expiryInput.value) {
+                let today = new Date();
+                today.setMonth(today.getMonth() + 1);
+                expiryInput.value = today.toISOString().split('T')[0];
+            }
         }
         
         document.getElementById('bg-upload').addEventListener('change', function(event) {
