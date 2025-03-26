@@ -89,6 +89,39 @@
             width: 100%; /* Match the width of the card container */
             max-width: 300px; /* Ensure it aligns with the card's max width */
        }
+       .slider-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1px; /* Reduced spacing between sliders */
+        width: 90%;
+        max-width: 250px;
+        margin-top: 5px;
+    }
+    .slider-container label {
+        font-size: 12px; /* Reduced text size */
+        color: black;
+    }
+
+    .slider-container input[type="range"]::-moz-range-thumb {
+        width: 15px;
+        height: 15px;
+        background: #fff;
+        border: 2px solid red;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .slider-container input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        appearance: none;
+        width: 15px;
+        height: 15px;
+        background: #fff;
+        border: 2px solid red; /* Thumb border matches slider color */
+        border-radius: 50%;
+        cursor: pointer;
+    }
+    
     </style>
 </head>
 <body>
@@ -110,6 +143,31 @@
         <input type="text" id="gifter-input" placeholder="Gifter's Name">
         <button onclick="generateCard()">Generate</button>
         <button onclick="closeForm()" >X</button>
+    </div>
+    <div class="slider-container">
+        <!-- Receiver Slider -->
+        <label for="receiver-slider">Receiver Position:</label>
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button onclick="changeFontSize('receiver', -2)">-</button>
+            <input type="range" id="receiver-slider" min="0" max="100" value="30" oninput="updateTextPosition('receiver', this.value)" style="flex: 1;">
+            <button onclick="changeFontSize('receiver', 2)">+</button>
+        </div>
+    
+        <!-- Expiry Slider -->
+        <label for="expiry-slider">Expiry Position:</label>
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button onclick="changeFontSize('expiry', -2)">-</button>
+            <input type="range" id="expiry-slider" min="0" max="100" value="50" oninput="updateTextPosition('expiry', this.value)" style="flex: 1;">
+            <button onclick="changeFontSize('expiry', 2)">+</button>
+        </div>
+    
+        <!-- Gifter Slider -->
+        <label for="gifter-slider">Gifter Position:</label>
+        <div style="display: flex; align-items: center; gap: 5px;">
+            <button onclick="changeFontSize('gifter', -2)">-</button>
+            <input type="range" id="gifter-slider" min="0" max="100" value="80" oninput="updateTextPosition('gifter', this.value)" style="flex: 1;">
+            <button onclick="changeFontSize('gifter', 2)">+</button>
+        </div>
     </div>
     <canvas id="cardCanvas"></canvas>
 
@@ -147,8 +205,8 @@
         
         function generateCard() {
             document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
-            document.getElementById('expiry').textContent = document.getElementById('expiry-input').value;
-            document.getElementById('gifter').textContent = document.getElementById('gifter-input').value;
+            document.getElementById('expiry').textContent = 'Date de validité: '+document.getElementById('expiry-input').value;
+            document.getElementById('gifter').textContent = 'Conseiller: '+document.getElementById('gifter-input').value;
             document.getElementById('form-container').style.display = 'none';
         }
         
@@ -166,7 +224,7 @@
 
             ctx.font = "150px Arial";
             ctx.fillText(document.getElementById('receiver').textContent, 300, 180);
-            ctx.font = "20px Arial";
+            ctx.font = "10px verdana";
             ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
             ctx.font = "50px Arial";
             ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
@@ -198,6 +256,19 @@
 
         function closeForm() {
             document.getElementById('form-container').style.display = 'none';
+        }
+
+        function updateTextPosition(id, value) {
+            const element = document.getElementById(id);
+            element.style.top = value + '%';
+        }
+        function changeFontSize(id, change) {
+            const element = document.getElementById(id);
+            const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+            const newSize = currentSize + change;
+            if (newSize >= 10 && newSize <= 100) { // Set limits for font size
+                element.style.fontSize = newSize + 'px';
+            }
         }
     </script>
 </body>
