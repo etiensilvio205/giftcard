@@ -221,13 +221,27 @@
             ctx.fillStyle = "black";
            
             ctx.textAlign = "center";
+   // Get dynamically updated styles for Receiver
+   const receiverElement = document.getElementById('receiver');
+    const receiverFontSize = window.getComputedStyle(receiverElement).fontSize;
+    const receiverTop = parseFloat(receiverElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
+    ctx.font = receiverFontSize + " Arial";
+    ctx.fillText(receiverElement.textContent, canvas.width / 2, receiverTop);
 
-            ctx.font = "150px Arial";
-            ctx.fillText(document.getElementById('receiver').textContent, 300, 180);
-            ctx.font = "10px verdana";
-            ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
-            ctx.font = "50px Arial";
-            ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
+    // Get dynamically updated styles for Expiry
+    const expiryElement = document.getElementById('expiry');
+    const expiryFontSize = window.getComputedStyle(expiryElement).fontSize;
+    const expiryTop = parseFloat(expiryElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
+    ctx.font = expiryFontSize + " Arial";
+    ctx.fillText(expiryElement.textContent, canvas.width / 2, expiryTop);
+
+    // Get dynamically updated styles for Gifter
+    const gifterElement = document.getElementById('gifter');
+    const gifterFontSize = window.getComputedStyle(gifterElement).fontSize;
+    const gifterTop = parseFloat(gifterElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
+    ctx.font = gifterFontSize + " Arial";
+    ctx.fillText(gifterElement.textContent, canvas.width / 2, gifterTop);
+
             
             canvas.toBlob(function(blob) {
                 const file = new File([blob], "gift-card.png", { type: "image/png" });
