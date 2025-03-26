@@ -6,47 +6,81 @@
     <title>Gift Card Generator</title>
     <style>
         body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: 'Poppins', sans-serif;
+            background-color: #f4f4f4;
+        }
+        button {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #007BFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 10px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        #form-container {
+            display: none;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            font-family: Arial, sans-serif;
+        }
+        input {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 5px;
         }
         #card-container {
             position: relative;
             width: 300px;
             height: 450px;
-            margin: auto;
             background-image: url('background2.jpg');
             background-size: cover;
             background-position: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-direction: column;
         }
         .overlay-text {
             position: absolute;
             width: 100%;
-            color: white;
+            color: black;
             font-size: 18px;
             font-weight: bold;
             text-align: center;
         }
-        #receiver {
-            top: 20%;
-        }
-        #expiry {
-            top: 50%;
-        }
-        #gifter {
-            top: 80%;
-        }
+        #receiver { top: 20%; }
+        #expiry { top: 50%; }
+        #gifter { top: 80%; }
         canvas {
             display: none;
         }
     </style>
 </head>
 <body>
-    <h2>Gift Card Generator</h2>
-    <input type="file" id="bg-upload" accept="image/*">
-    <input type="text" id="receiver-input" placeholder="Receiver's Name">
-    <input type="text" id="expiry-input" placeholder="Expiry Date">
-    <input type="text" id="gifter-input" placeholder="Gifter's Name">
-    <button onclick="generateCard()">Generate Card</button>
+    <button onclick="showForm()">Create Gift Card</button>
+    <div id="form-container">
+        <h2>Enter Card Details</h2>
+        <input type="file" id="bg-upload" accept="image/*">
+        <input type="text" id="receiver-input" placeholder="Receiver's Name">
+        <input type="text" id="expiry-input" placeholder="Expiry Date">
+        <input type="text" id="gifter-input" placeholder="Gifter's Name">
+        <button onclick="generateCard()">Generate Card</button>
+    </div>
     <div id="card-container">
         <div class="overlay-text" id="receiver"></div>
         <div class="overlay-text" id="expiry"></div>
@@ -61,6 +95,10 @@
         bgImage.onload = function() {
             document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
         };
+        
+        function showForm() {
+            document.getElementById('form-container').style.display = 'block';
+        }
         
         document.getElementById('bg-upload').addEventListener('change', function(event) {
             const file = event.target.files[0];
@@ -79,27 +117,28 @@
             document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
             document.getElementById('expiry').textContent = document.getElementById('expiry-input').value;
             document.getElementById('gifter').textContent = document.getElementById('gifter-input').value;
+            document.getElementById('form-container').style.display = 'none';
         }
         
         function saveCard() {
             const canvas = document.getElementById('cardCanvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 300;
-            canvas.height = 450;
+            canvas.width = 600;
+            canvas.height = 900;
             
-            ctx.drawImage(bgImage, 0, 0, 300, 450);
+            ctx.drawImage(bgImage, 0, 0, 600, 900);
             
-            ctx.fillStyle = "white";
-            ctx.font = "20px Arial";
+            ctx.fillStyle = "black";
+            ctx.font = "40px Poppins";
             ctx.textAlign = "center";
             
-            ctx.fillText(document.getElementById('receiver').textContent, 150, 90);
-            ctx.fillText(document.getElementById('expiry').textContent, 150, 225);
-            ctx.fillText(document.getElementById('gifter').textContent, 150, 360);
+            ctx.fillText(document.getElementById('receiver').textContent, 300, 180);
+            ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
+            ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
             
             const link = document.createElement('a');
             link.download = 'gift-card.png';
-            link.href = canvas.toDataURL();
+            link.href = canvas.toDataURL("image/png", 1.0);
             link.click();
         }
     </script>
