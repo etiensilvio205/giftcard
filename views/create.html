@@ -4,151 +4,103 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gift Card Generator</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <style>
         body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+            text-align: center;
             font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            position: relative;
         }
-        #gift-card {
-            width: 100vw;
-            height: 100vh;
-            background: url('background2.jpg') no-repeat center center;
-            background-size: contain;
+        #card-container {
             position: relative;
+            width: 300px;
+            height: 450px;
+            margin: auto;
+            background-image: url('background2.jpg');
+            background-size: cover;
+            background-position: center;
         }
-        .draggable {
+        .overlay-text {
             position: absolute;
-            cursor: move;
-            background: rgba(255, 255, 255, 0.7);
-            padding: 5px;
-            border-radius: 5px;
-        }
-        #popup-form {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-            z-index: 1000;
-            width: 80%;
-            max-width: 300px;
-        }
-        #popup-form input {
             width: 100%;
-            margin-bottom: 10px;
-            padding: 8px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-        }
-        #popup-form button {
-            width: 100%;
-            padding: 10px;
-            background: violet;
-            border: none;
             color: white;
-            border-radius: 5px;
-            cursor: pointer;
-        }
-        .close-btn {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            cursor: pointer;
             font-size: 18px;
             font-weight: bold;
+            text-align: center;
         }
-        #open-form-btn {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: violet;
-            color: white;
-            padding: 15px;
-            border-radius: 50%;
-            border: none;
-            cursor: pointer;
-            font-size: 20px;
+        #receiver {
+            top: 20%;
+        }
+        #expiry {
+            top: 50%;
+        }
+        #gifter {
+            top: 80%;
+        }
+        canvas {
+            display: none;
         }
     </style>
 </head>
 <body>
-    <div id="gift-card">
-        <div id="name-text" class="draggable" style="top: 10%; left: 10%;">Recipient Name</div>
-        <div id="date-text" class="draggable" style="top: 50%; left: 10%;">Expiration Date</div>
-        <div id="giver-text" class="draggable" style="top: 80%; left: 10%;">From</div>
+    <h2>Gift Card Generator</h2>
+    <input type="file" id="bg-upload" accept="image/*">
+    <input type="text" id="receiver-input" placeholder="Receiver's Name">
+    <input type="text" id="expiry-input" placeholder="Expiry Date">
+    <input type="text" id="gifter-input" placeholder="Gifter's Name">
+    <button onclick="generateCard()">Generate Card</button>
+    <div id="card-container">
+        <div class="overlay-text" id="receiver"></div>
+        <div class="overlay-text" id="expiry"></div>
+        <div class="overlay-text" id="gifter"></div>
     </div>
-    
-    <button id="open-form-btn" onclick="showForm()">+</button>
-    
-    <div id="popup-form">
-        <span class="close-btn" onclick="closeForm()">&times;</span>
-        <h3>Enter Gift Details</h3>
-        <input type="text" id="name" placeholder="Recipient Name" oninput="updateText('name-text', this.value)">
-        <input type="text" id="date" placeholder="Expiration Date" oninput="updateText('date-text', this.value)">
-        <input type="text" id="giver" placeholder="From" oninput="updateText('giver-text', this.value)">
-        <button onclick="closeForm()">Save</button>
-    </div>
-    
-    <button onclick="captureAndShare()">Share via WhatsApp</button>
-    
+    <canvas id="cardCanvas"></canvas>
+    <button onclick="saveCard()">Save & Share</button>
+
     <script>
-        function updateText(id, value) {
-            document.getElementById(id).textContent = value;
-        }
-
-        function showForm() {
-            document.getElementById('popup-form').style.display = 'block';
-        }
-
-        function closeForm() {
-            document.getElementById('popup-form').style.display = 'none';
-        }
-
-        function captureAndShare() {
-            const giftCard = document.getElementById('gift-card');
-            html2canvas(giftCard, { scale: 2, useCORS: true }).then(canvas => {
-                const imageData = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = imageData;
-                link.download = 'gift-card.png';
-                link.click();
-
-                const blob = dataURItoBlob(imageData);
-                if (navigator.share) {
-                    navigator.share({
-                        files: [new File([blob], 'gift-card.png', { type: 'image/png' })],
-                        title: 'Gift Card',
-                        text: 'Here is your gift card!',
-                    });
-                } else {
-                    alert('Sharing not supported on this device. Please download the image and share manually.');
+        let bgImage = new Image();
+        bgImage.src = 'background2.jpg';
+        bgImage.onload = function() {
+            document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
+        };
+        
+        document.getElementById('bg-upload').addEventListener('change', function(event) {
+            const file = event.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bgImage = new Image();
+                    bgImage.src = e.target.result;
+                    document.getElementById('card-container').style.backgroundImage = `url(${e.target.result})`;
                 }
-            });
-        }
-
-        function dataURItoBlob(dataURI) {
-            const byteString = atob(dataURI.split(',')[1]);
-            const mimeString = dataURI.split(',')[0].split(':')[1].split(';')[0];
-            const ab = new ArrayBuffer(byteString.length);
-            const ia = new Uint8Array(ab);
-            for (let i = 0; i < byteString.length; i++) {
-                ia[i] = byteString.charCodeAt(i);
+                reader.readAsDataURL(file);
             }
-            return new Blob([ab], { type: mimeString });
+        });
+        
+        function generateCard() {
+            document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
+            document.getElementById('expiry').textContent = document.getElementById('expiry-input').value;
+            document.getElementById('gifter').textContent = document.getElementById('gifter-input').value;
+        }
+        
+        function saveCard() {
+            const canvas = document.getElementById('cardCanvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = 300;
+            canvas.height = 450;
+            
+            ctx.drawImage(bgImage, 0, 0, 300, 450);
+            
+            ctx.fillStyle = "white";
+            ctx.font = "20px Arial";
+            ctx.textAlign = "center";
+            
+            ctx.fillText(document.getElementById('receiver').textContent, 150, 90);
+            ctx.fillText(document.getElementById('expiry').textContent, 150, 225);
+            ctx.fillText(document.getElementById('gifter').textContent, 150, 360);
+            
+            const link = document.createElement('a');
+            link.download = 'gift-card.png';
+            link.href = canvas.toDataURL();
+            link.click();
         }
     </script>
 </body>
