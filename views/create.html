@@ -109,6 +109,7 @@
         <input type="date" id="expiry-input">
         <input type="text" id="gifter-input" placeholder="Gifter's Name">
         <button onclick="generateCard()">Generate</button>
+        <button onclick="closeForm()" >X</button>
     </div>
     <canvas id="cardCanvas"></canvas>
 
@@ -129,6 +130,7 @@
                 expiryInput.value = today.toISOString().split('T')[0];
             }
         }
+        
         
         document.getElementById('bg-upload').addEventListener('change', function(event) {
             const file = event.target.files[0];
@@ -189,6 +191,10 @@
                     alert("Your browser does not support direct WhatsApp image sharing.");
                 }
             });
+        }
+
+        function closeForm() {
+            document.getElementById('form-container').style.display = 'none';
         }
     </script>
 </body>
