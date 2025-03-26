@@ -75,7 +75,7 @@
             font-weight: bold;
             text-align: center;
         }
-        #receiver { top: 20%; }
+        #receiver { top: 30%; }
         #expiry { top: 50%; }
         #gifter { top: 80%; }
         canvas {
@@ -161,11 +161,14 @@
             ctx.drawImage(bgImage, 0, 0, 600, 900);
             
             ctx.fillStyle = "black";
-            ctx.font = "50px Arial";
+           
             ctx.textAlign = "center";
-            
+
+            ctx.font = "70px Arial";
             ctx.fillText(document.getElementById('receiver').textContent, 300, 180);
+            ctx.font = "20px Arial";
             ctx.fillText(document.getElementById('expiry').textContent, 300, 450);
+            ctx.font = "50px Arial";
             ctx.fillText(document.getElementById('gifter').textContent, 300, 720);
             
             canvas.toBlob(function(blob) {
