@@ -18,7 +18,7 @@
         button {
             padding: 8.5px 17px;
             font-size: 13.6px;
-            background-color: #a22a9b;
+            background-color: red;
             color: white;
             border: none;
             border-radius: 5px;
@@ -26,7 +26,7 @@
             margin: 10px;
         }
         button:hover {
-            background-color: #871f7d;
+            background-color: darkred;
         }
         #form-container {
             position: absolute;
@@ -81,25 +81,34 @@
         canvas {
             display: none;
         }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
     </style>
 </head>
 <body>
-    <button onclick="showForm()">Create Gift Card</button>
-    <div id="form-container">
-        <h2>Enter Card Details</h2>
-        <input type="file" id="bg-upload" accept="image/*">
-        <input type="text" id="receiver-input" placeholder="Receiver's Name">
-        <input type="text" id="expiry-input" placeholder="Expiry Date">
-        <input type="text" id="gifter-input" placeholder="Gifter's Name">
-        <button onclick="generateCard()">Generate Card</button>
-    </div>
     <div id="card-container">
         <div class="overlay-text" id="receiver"></div>
         <div class="overlay-text" id="expiry"></div>
         <div class="overlay-text" id="gifter"></div>
     </div>
+    <div class="button-container">
+        <button onclick="showForm()">Create Gift Card</button>
+        <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
+    </div>
+    
+    <div id="form-container">
+        <h2>Enter Card Details</h2>
+        <input type="file" id="bg-upload" accept="image/*">
+        <input type="text" id="receiver-input" placeholder="Receiver's Name">
+        <input type="date" id="expiry-input">
+        <input type="text" id="gifter-input" placeholder="Gifter's Name">
+        <button onclick="generateCard()">Generate Card</button>
+    </div>
     <canvas id="cardCanvas"></canvas>
-    <button onclick="shareOnWhatsApp()">Share on WhatsApp</button>
 
     <script>
         let bgImage = new Image();
