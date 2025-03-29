@@ -236,24 +236,29 @@ function saveCard(callback) {
     });
 }
 
-function shareOnWhatsApp() {
-    saveCard(function(file) {
-        const dataTransfer = new DataTransfer();
-        dataTransfer.items.add(file);
-        const input = document.createElement('input');
-        input.type = 'file';
-        input.files = dataTransfer.files;
+        // Share via WhatsApp or browser share API
+        function shareOnWhatsApp() {
+            const cardContainer = document.getElementById('card-container');
+            
+            html2canvas(cardContainer).then(function(canvas) {
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], "gift-card.png", { type: "image/png" });
 
-        if (navigator.share) {
-            navigator.share({
-                files: input.files,
-                text: "Check out this gift card!"
-            }).catch(console.error);
-        } else {
-            alert("Your browser does not support direct WhatsApp image sharing.");
+                    if (navigator.share) {
+                        // For mobile sharing via web share API
+                        navigator.share({
+                            files: [file],
+                            text: "Check out this gift card!"
+                        }).catch(console.error);
+                    } else {
+                        // If navigator.share is unavailable, show a fallback message
+                        alert("Your browser doesn't support sharing. You can manually download the card and share it.");
+                    }
+                });
+            }).catch(function(error) {
+                console.error("Error rendering canvas:", error);
+            });
         }
-    });
-}
 
 function closeForm() {
     document.getElementById('form-container').style.display = 'none';
