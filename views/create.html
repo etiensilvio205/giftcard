@@ -220,14 +220,14 @@
             bgImage.src = document.getElementById('card-container').style.backgroundImage.slice(5, -2);
             bgImage.onload = function() {
                 ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-                
                 ctx.fillStyle = "black";
                 ctx.textAlign = "center";
+                ctx.font = "bold 18px Poppins, sans-serif";
                 
                 function drawText(id) {
                     const textElement = document.getElementById(id);
                     const fontSize = parseInt(window.getComputedStyle(textElement).fontSize, 10);
-                    ctx.font = `${fontSize}px Arial`;
+                    ctx.font = `bold ${fontSize}px Poppins, sans-serif`;
                     const yPos = (parseFloat(textElement.style.top) / 100) * canvas.height;
                     ctx.fillText(textElement.textContent, canvas.width / 2, yPos);
                 }
