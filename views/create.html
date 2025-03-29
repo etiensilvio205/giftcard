@@ -174,129 +174,104 @@
     <canvas id="cardCanvas"></canvas>
    
    <script>
-    console.log('html2canvas:', typeof html2canvas);
-
 let receiverFontSize = 18;  // Default font size for receiver text
-    let expiryFontSize = 18;    // Default font size for expiry text
-    let gifterFontSize = 18;    // Default font size for gifter text 
+let expiryFontSize = 18;    // Default font size for expiry text
+let gifterFontSize = 18;    // Default font size for gifter text 
 
-        let bgImage = new Image();
-        bgImage.src = 'background2.jpg';
-        bgImage.onload = function() {
-            document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
+let bgImage = new Image();
+bgImage.crossOrigin = 'Anonymous';  // Enable CORS for image
+bgImage.src = 'background2.jpg';  // Background image URL
+
+bgImage.onload = function() {
+    document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
+};
+
+function showForm() {
+    document.getElementById('form-container').style.display = 'block';
+    let expiryInput = document.getElementById('expiry-input');
+    if (!expiryInput.value) {
+        let today = new Date();
+        today.setMonth(today.getMonth() + 1);
+        expiryInput.value = today.toISOString().split('T')[0];
+    }
+}
+
+document.getElementById('bg-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (file) {
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            bgImage = new Image();
+            bgImage.src = e.target.result;
+            bgImage.onload = function() {
+                document.getElementById('card-container').style.backgroundImage = `url(${e.target.result})`;
+            };
         };
-        
-        function showForm() {
-            document.getElementById('form-container').style.display = 'block';
-            
-            let expiryInput = document.getElementById('expiry-input');
-            if (!expiryInput.value) {
-                let today = new Date();
-                today.setMonth(today.getMonth() + 1);
-                expiryInput.value = today.toISOString().split('T')[0];
-            }
+        reader.readAsDataURL(file);
+    }
+});
+
+function generateCard() {
+    document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
+    document.getElementById('expiry').textContent = 'Date de validité: ' + document.getElementById('expiry-input').value;
+    document.getElementById('gifter').textContent = 'Conseiller: ' + document.getElementById('gifter-input').value;
+    document.getElementById('form-container').style.display = 'none';
+}
+
+function saveCard(callback) {
+    const cardContainer = document.getElementById('card-container');
+    // Use html2canvas to render the card to a canvas
+    html2canvas(cardContainer, {
+        scale: 4,  // High resolution
+        useCORS: true,  // Enable CORS support
+        logging: false, // Disable logging for cleaner output
+        letterRendering: 1
+    }).then(function(canvas) {
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], "gift-card.png", { type: "image/png" });
+            callback(file);
+        }, "image/png");
+    }).catch(function(error) {
+        console.error("Error rendering canvas:", error);
+    });
+}
+
+function shareOnWhatsApp() {
+    saveCard(function(file) {
+        const dataTransfer = new DataTransfer();
+        dataTransfer.items.add(file);
+        const input = document.createElement('input');
+        input.type = 'file';
+        input.files = dataTransfer.files;
+
+        if (navigator.share) {
+            navigator.share({
+                files: input.files,
+                text: "Check out this gift card!"
+            }).catch(console.error);
+        } else {
+            alert("Your browser does not support direct WhatsApp image sharing.");
         }
-        
-        
-        document.getElementById('bg-upload').addEventListener('change', function(event) {
-            const file = event.target.files[0];
-            if (file) {
-                const reader = new FileReader();
-                reader.onload = function(e) {
-                    bgImage = new Image();
-                    bgImage.src = e.target.result;
-                    document.getElementById('card-container').style.backgroundImage = `url(${e.target.result})`;
-                }
-                reader.readAsDataURL(file);
-            }
-        });
-        
-        function generateCard() {
-            document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
-            document.getElementById('expiry').textContent = 'Date de validité: '+document.getElementById('expiry-input').value;
-            document.getElementById('gifter').textContent = 'Conseiller: '+document.getElementById('gifter-input').value;
-            document.getElementById('form-container').style.display = 'none';
-        }
-        
+    });
+}
 
+function closeForm() {
+    document.getElementById('form-container').style.display = 'none';
+}
 
-            // Function to save the card exactly as it appears on the screen in high quality
-    function saveCard(callback) {
-        const cardContainer = document.getElementById('card-container');
-        
-        let bgImage = new Image();
-        bgImage.crossOrigin = 'Anonymous';  // Allow cross-origin requests
-        bgImage.src = 'background2.jpg';  // Use the image URL
-
-        bgImage.onload = function() {
-            document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
-        };
-
-  
-
-            // Using html2canvas with CORS enabled and allowTaint option for local images
-            html2canvas(cardContainer, {
-                scale: 4, // High resolution
-                useCORS: true,  // Attempt to load images with CORS enabled
-                logging: false, // Disable logging for cleaner output
-                letterRendering: 1
-            }).then(function(canvas) {
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], "gift-card.png", { type: "image/png" });
-                    callback(file);
-                }, "image/png");
-            }).catch(function(error) {
-                console.error("Error rendering canvas:", error);
-            });
-   
+function changeFontSize(id, change) {
+    const element = document.getElementById(id);
+    const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+    const newSize = currentSize + change;
+    if (newSize >= 10 && newSize <= 100) {
+        element.style.fontSize = newSize + 'px';
     }
-    
+}
 
- 
-    function shareOnWhatsApp() {
-        saveCard(function(file) {
-            const dataTransfer = new DataTransfer();
-            dataTransfer.items.add(file);
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.files = dataTransfer.files;
-            
-            if (navigator.share) {
-                navigator.share({
-                    files: input.files,
-                    text: "Check out this gift card!"
-                }).catch(console.error);
-            } else {
-                alert("Your browser does not support direct WhatsApp image sharing.");
-            }
-        });
-    }
-
-    function closeForm() {
-        document.getElementById('form-container').style.display = 'none';
-    }
-
-    //function updateTextPosition(id, value) {
-    //    const element = document.getElementById(id);
-    //    element.style.top = value + '%';
-    //}
-    function changeFontSize(id, change) {
-        const element = document.getElementById(id);
-        const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
-        const newSize = currentSize + change;
-        if (newSize >= 10 && newSize <= 100) { // Set limits for font size
-            element.style.fontSize = newSize + 'px';
-        }
-    }
-
-
-
-
-    // Ensure sliders update positions
-    function updateTextPosition(id, value) {
-        const element = document.getElementById(id);
-        element.style.top = value + '%';
-    }
+function updateTextPosition(id, value) {
+    const element = document.getElementById(id);
+    element.style.top = value + '%';
+}
     </script>
 </body>
 </html>
