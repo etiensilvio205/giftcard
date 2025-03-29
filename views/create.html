@@ -213,41 +213,34 @@
         function saveCard(callback) {
             const canvas = document.getElementById('cardCanvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = bgImage.naturalWidth;
-            canvas.height = bgImage.naturalHeight;
+            canvas.width = 600;
+            canvas.height = 900;
 
-            ctx.drawImage(bgImage, 0, 0,  canvas.width, canvas.height);
-            
-            ctx.fillStyle = "black";
-           
-            ctx.textAlign = "center";
-
-   // Render Receiver Text
-   const receiverElement = document.getElementById('receiver');
-    const receiverFontSize = window.getComputedStyle(receiverElement).fontSize;
-    const receiverTop = parseFloat(receiverElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
-    ctx.font = receiverFontSize + " Arial";
-    ctx.fillText(receiverElement.textContent, canvas.width / 2, receiverTop);
-
-    // Render Expiry Text
-    const expiryElement = document.getElementById('expiry');
-    const expiryFontSize = window.getComputedStyle(expiryElement).fontSize;
-    const expiryTop = parseFloat(expiryElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
-    ctx.font = expiryFontSize + " Arial";
-    ctx.fillText(expiryElement.textContent, canvas.width / 2, expiryTop);
-
-    // Render Gifter Text
-    const gifterElement = document.getElementById('gifter');
-    const gifterFontSize = window.getComputedStyle(gifterElement).fontSize;
-    const gifterTop = parseFloat(gifterElement.style.top) / 100 * canvas.height; // Convert percentage to pixels
-    ctx.font = gifterFontSize + " Arial";
-    ctx.fillText(gifterElement.textContent, canvas.width / 2, gifterTop);
-
-    
-            canvas.toBlob(function(blob) {
-                const file = new File([blob], "gift-card.png", { type: "image/png" });
-                callback(file);
-            }, "image/png");
+            let bgImage = new Image();
+            bgImage.src = document.getElementById('card-container').style.backgroundImage.slice(5, -2);
+            bgImage.onload = function() {
+                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+                
+                ctx.fillStyle = "black";
+                ctx.textAlign = "center";
+                
+                function drawText(id) {
+                    const textElement = document.getElementById(id);
+                    const fontSize = parseInt(window.getComputedStyle(textElement).fontSize, 10);
+                    ctx.font = `${fontSize}px Arial`;
+                    const yPos = (parseFloat(textElement.style.top) / 100) * canvas.height;
+                    ctx.fillText(textElement.textContent, canvas.width / 2, yPos);
+                }
+                
+                drawText('receiver');
+                drawText('expiry');
+                drawText('gifter');
+                
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], "gift-card.png", { type: "image/png" });
+                    callback(file);
+                }, "image/png");
+            };
         }
         
         function shareOnWhatsApp() {
