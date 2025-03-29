@@ -123,6 +123,8 @@
     }
     
     </style>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
 </head>
 <body>
     <div id="card-container">
@@ -170,9 +172,9 @@
         </div>
     </div>
     <canvas id="cardCanvas"></canvas>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.2/html2canvas.min.js"></script>
-
+   
    <script>
+    console.log('html2canvas:', typeof html2canvas);
 
 let receiverFontSize = 18;  // Default font size for receiver text
     let expiryFontSize = 18;    // Default font size for expiry text
@@ -247,9 +249,12 @@ let receiverFontSize = 18;  // Default font size for receiver text
                     const file = new File([blob], "gift-card.png", { type: "image/png" });
                     callback(file);
                 }, "image/png");
-            });
+            }).catch(function (error) {
+        console.error('Error rendering canvas:', error);
+    });
+};
         };
-    }
+    
 
  
         function shareOnWhatsApp() {
