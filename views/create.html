@@ -232,11 +232,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
             document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
         };
 
-        bgImage.src = 'background2.jpg'; // Make sure this is a CORS-enabled or base64-encoded image
-        
-        bgImage.onload = function() {
-            const canvasWidth = bgImage.width;
-            const canvasHeight = bgImage.height;
+  
 
             // Using html2canvas with CORS enabled and allowTaint option for local images
             html2canvas(cardContainer, {
@@ -252,7 +248,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
             }).catch(function(error) {
                 console.error("Error rendering canvas:", error);
             });
-        };
+   
     }
     
 
