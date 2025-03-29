@@ -224,75 +224,68 @@ let receiverFontSize = 18;  // Default font size for receiver text
     function saveCard(callback) {
         const cardContainer = document.getElementById('card-container');
         
-        // Get the original background image size
         const bgImage = new Image();
-        bgImage.src = 'background2.jpg'; // Replace with your image path if needed
+        bgImage.src = 'background2.jpg'; // Make sure this is a CORS-enabled or base64-encoded image
         
         bgImage.onload = function() {
-            // Set canvas dimensions to match the background image size
             const canvasWidth = bgImage.width;
             const canvasHeight = bgImage.height;
 
-
-                // Image is loaded, now render it on the canvas
-                html2canvas(cardContainer, {
-                    scale: 4,
-                    useCORS: true,
-                    logging: false,
-                    letterRendering: 1
-                }).then(function(canvas) {
-                    canvas.toBlob(function(blob) {
-                        const file = new File([blob], "gift-card.png", { type: "image/png" });
-                        callback(file);
-                    }, "image/png");
-                }).catch(function(error) {
-                    console.error("Error rendering canvas:", error);
-                    });
-
-        }; 
-
-        bgImage.onerror = function() {
-                console.error("Failed to load image.");
+            // Using html2canvas with CORS enabled and allowTaint option for local images
+            html2canvas(cardContainer, {
+                scale: 4, // High resolution
+                useCORS: true,  // Attempt to load images with CORS enabled
+                allowTaint: true,  // Allow tainted canvas (if needed)
+                logging: false, // Disable logging for cleaner output
+                letterRendering: 1
+            }).then(function(canvas) {
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], "gift-card.png", { type: "image/png" });
+                    callback(file);
+                }, "image/png");
+            }).catch(function(error) {
+                console.error("Error rendering canvas:", error);
+            });
         };
-    };
+    }
     
 
  
-        function shareOnWhatsApp() {
-            saveCard(function(file) {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.files = dataTransfer.files;
-                
-                if (navigator.share) {
-                    navigator.share({
-                        files: input.files,
-                        text: "Check out this gift card!"
-                    }).catch(console.error);
-                } else {
-                    alert("Your browser does not support direct WhatsApp image sharing.");
-                }
-            });
-        }
-
-        function closeForm() {
-            document.getElementById('form-container').style.display = 'none';
-        }
-
-        //function updateTextPosition(id, value) {
-        //    const element = document.getElementById(id);
-        //    element.style.top = value + '%';
-        //}
-        function changeFontSize(id, change) {
-            const element = document.getElementById(id);
-            const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
-            const newSize = currentSize + change;
-            if (newSize >= 10 && newSize <= 100) { // Set limits for font size
-                element.style.fontSize = newSize + 'px';
+    function shareOnWhatsApp() {
+        saveCard(function(file) {
+            const dataTransfer = new DataTransfer();
+            dataTransfer.items.add(file);
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.files = dataTransfer.files;
+            
+            if (navigator.share) {
+                navigator.share({
+                    files: input.files,
+                    text: "Check out this gift card!"
+                }).catch(console.error);
+            } else {
+                alert("Your browser does not support direct WhatsApp image sharing.");
             }
+        });
+    }
+
+    function closeForm() {
+        document.getElementById('form-container').style.display = 'none';
+    }
+
+    //function updateTextPosition(id, value) {
+    //    const element = document.getElementById(id);
+    //    element.style.top = value + '%';
+    //}
+    function changeFontSize(id, change) {
+        const element = document.getElementById(id);
+        const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+        const newSize = currentSize + change;
+        if (newSize >= 10 && newSize <= 100) { // Set limits for font size
+            element.style.fontSize = newSize + 'px';
         }
+    }
 
 
 
