@@ -172,6 +172,11 @@
     <canvas id="cardCanvas"></canvas>
 
     <script>
+
+let receiverFontSize = 18;  // Default font size for receiver text
+    let expiryFontSize = 18;    // Default font size for expiry text
+    let gifterFontSize = 18;    // Default font size for gifter text 
+    
         let bgImage = new Image();
         bgImage.src = 'background2.jpg';
         bgImage.onload = function() {
@@ -210,7 +215,10 @@
             document.getElementById('form-container').style.display = 'none';
         }
         
-        function saveCard(callback) {
+
+
+    // Function to save the card
+    function saveCard(callback) {
         const canvas = document.getElementById('cardCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = bgImage.naturalWidth;
@@ -221,11 +229,10 @@
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
 
-        // Function to draw text with proper font size and position
-        function drawText(id, sliderId) {
+        // Function to draw text on canvas with updated font size and position
+        function drawText(id, sliderId, fontSize) {
             const element = document.getElementById(id);
-            const fontSize = parseInt(element.style.fontSize, 10) || 18; // Get user-set font size, default 18
-            const yPercentage = parseFloat(document.getElementById(sliderId).value); // Get slider value for position
+            const yPercentage = parseFloat(document.getElementById(sliderId).value);
             const yPos = (canvas.height * yPercentage) / 100;
 
             ctx.font = fontSize + "px Arial";
@@ -233,9 +240,9 @@
         }
 
         // Draw each text field
-        drawText('receiver', 'receiver-slider');
-        drawText('expiry', 'expiry-slider');
-        drawText('gifter', 'gifter-slider');
+        drawText('receiver', 'receiver-slider', receiverFontSize);
+        drawText('expiry', 'expiry-slider', expiryFontSize);
+        drawText('gifter', 'gifter-slider', gifterFontSize);
 
         // Save the canvas as an image
         canvas.toBlob(function (blob) {
@@ -243,7 +250,6 @@
             callback(file);
         }, "image/png");
     }
-
         
         function shareOnWhatsApp() {
             saveCard(function(file) {
@@ -268,18 +274,41 @@
             document.getElementById('form-container').style.display = 'none';
         }
 
-        function updateTextPosition(id, value) {
-            const element = document.getElementById(id);
-            element.style.top = value + '%';
+        //function updateTextPosition(id, value) {
+        //    const element = document.getElementById(id);
+        //    element.style.top = value + '%';
+        //}
+        //function changeFontSize(id, change) {
+        //    const element = document.getElementById(id);
+         //   const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+         //   const newSize = currentSize + change;
+         //   if (newSize >= 10 && newSize <= 100) { // Set limits for font size
+        //        element.style.fontSize = newSize + 'px';
+         //   }
+        //}
+
+        // Change font size for the receiver text
+    function changeFontSize(id, change) {
+        if (id === 'receiver') {
+            receiverFontSize += change;
+            if (receiverFontSize < 10) receiverFontSize = 10;  // Ensure font size doesn't go below 10px
+        } else if (id === 'expiry') {
+            expiryFontSize += change;
+            if (expiryFontSize < 10) expiryFontSize = 10;
+        } else if (id === 'gifter') {
+            gifterFontSize += change;
+            if (gifterFontSize < 10) gifterFontSize = 10;
         }
-        function changeFontSize(id, change) {
-            const element = document.getElementById(id);
-            const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
-            const newSize = currentSize + change;
-            if (newSize >= 10 && newSize <= 100) { // Set limits for font size
-                element.style.fontSize = newSize + 'px';
-            }
-        }
+
+        const element = document.getElementById(id);
+        element.style.fontSize = receiverFontSize + 'px';  // Update the displayed font size
+    }
+
+    // Ensure sliders update positions
+    function updateTextPosition(id, value) {
+        const element = document.getElementById(id);
+        element.style.top = value + '%';
+    }
     </script>
 </body>
 </html>
