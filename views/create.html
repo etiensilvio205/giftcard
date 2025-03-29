@@ -233,27 +233,29 @@ let receiverFontSize = 18;  // Default font size for receiver text
             const canvasWidth = bgImage.width;
             const canvasHeight = bgImage.height;
 
-            // Use html2canvas to render the card at the correct size
-            html2canvas(cardContainer, {
-                width: canvasWidth, // Set the canvas width to the background image width
-                height: canvasHeight, // Set the canvas height to the background image height
-                x: 0,
-                y: 0,
-                scale: 4, // Increase scale for high quality (higher scale = higher resolution)
-                useCORS: true, // Allow cross-origin images to be rendered
-                logging: false, // Disable logging for cleaner output
-                letterRendering: 1, // Improve text rendering quality
-            }).then(function(canvas) {
-                // Convert the canvas to a blob (image file)
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], "gift-card.png", { type: "image/png" });
-                    callback(file);
-                }, "image/png");
-            }).catch(function (error) {
-        console.error('Error rendering canvas:', error);
-    });
-};
+            bgImage.onload = function() {
+                // Image is loaded, now render it on the canvas
+                html2canvas(cardContainer, {
+                    scale: 4,
+                    useCORS: true,
+                    logging: false,
+                    letterRendering: 1
+                }).then(function(canvas) {
+                    canvas.toBlob(function(blob) {
+                        const file = new File([blob], "gift-card.png", { type: "image/png" });
+                        callback(file);
+                    }, "image/png");
+                }).catch(function(error) {
+                    console.error("Error rendering canvas:", error);
+                    });
+            };
+
+        }; 
+
+        bgImage.onerror = function() {
+                console.error("Failed to load image.");
         };
+    };
     
 
  
