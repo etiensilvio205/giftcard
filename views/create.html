@@ -174,18 +174,12 @@
     <canvas id="cardCanvas"></canvas>
    
    <script>
-let receiverFontSize = 18;  // Default font size for receiver text
-let expiryFontSize = 18;    // Default font size for expiry text
-let gifterFontSize = 18;    // Default font size for gifter text 
-
-let bgImage = new Image();
-bgImage.crossOrigin = 'Anonymous';  // Enable CORS for image
-bgImage.src = 'background2.jpg';  // Background image URL
-
-bgImage.onload = function() {
-    document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
-};
-
+        let bgImage = new Image();
+        bgImage.src = 'background2.jpg';
+        bgImage.onload = function() {
+            document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
+        };
+        
 function showForm() {
     document.getElementById('form-container').style.display = 'block';
     let expiryInput = document.getElementById('expiry-input');
@@ -218,47 +212,46 @@ function generateCard() {
     document.getElementById('form-container').style.display = 'none';
 }
 
-function saveCard(callback) {
-    const cardContainer = document.getElementById('card-container');
-    // Use html2canvas to render the card to a canvas
-    html2canvas(cardContainer, {
-        scale: 4,  // High resolution
-        useCORS: true,  // Enable CORS support
-        logging: false, // Disable logging for cleaner output
-        letterRendering: 1
-    }).then(function(canvas) {
-        canvas.toBlob(function(blob) {
-            const file = new File([blob], "gift-card.png", { type: "image/png" });
-            callback(file);
-        }, "image/png");
-    }).catch(function(error) {
-        console.error("Error rendering canvas:", error);
-    });
-}
-
-        // Share via WhatsApp or browser share API
-        function shareOnWhatsApp() {
+function downloadCanvas() {
             const cardContainer = document.getElementById('card-container');
             
+            // Use html2canvas to render the card as a canvas
             html2canvas(cardContainer).then(function(canvas) {
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], "gift-card.png", { type: "image/png" });
-
-                    if (navigator.share) {
-                        // For mobile sharing via web share API
-                        navigator.share({
-                            files: [file],
-                            text: "Check out this gift card!"
-                        }).catch(console.error);
-                    } else {
-                        // If navigator.share is unavailable, show a fallback message
-                        alert("Your browser doesn't support sharing. You can manually download the card and share it.");
-                    }
-                });
+                const imageUrl = canvas.toDataURL('image/png');
+                const link = document.createElement('a');
+                link.href = imageUrl;
+                link.download = 'gift-card.png';
+                link.click();
             }).catch(function(error) {
                 console.error("Error rendering canvas:", error);
             });
         }
+
+        // Share via WhatsApp or browser share API
+        function shareOnWhatsApp() {
+    const cardContainer = document.getElementById('card-container');
+    
+    html2canvas(cardContainer).then(function(canvas) {
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], "gift-card.png", { type: "image/png" });
+
+            // Check if Web Share API is available
+            if (navigator.share) {
+                // For mobile sharing via Web Share API
+                navigator.share({
+                    files: [file],
+                    text: "Check out this gift card!"
+                }).catch(console.error);
+            } else {
+                // If Web Share is not available, show a fallback message
+                alert("Your browser doesn't support sharing directly. You can download the card and share it manually.");
+                downloadCanvas(); // Automatically trigger the download if sharing isn't available
+            }
+        });
+    }).catch(function(error) {
+        console.error("Error rendering canvas:", error);
+    });
+}
 
 function closeForm() {
     document.getElementById('form-container').style.display = 'none';
