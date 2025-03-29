@@ -223,20 +223,22 @@
         
         function drawText(id, yPercentage) {
             const element = document.getElementById(id);
-            const fontSize = parseInt(element.style.fontSize) || parseInt(window.getComputedStyle(element).fontSize, 10);
+            let fontSize = element.style.fontSize ? parseInt(element.style.fontSize, 10) : parseInt(window.getComputedStyle(element).fontSize, 10);
+            fontSize = Math.max(fontSize, 10); // Ensure a minimum font size
             ctx.font = fontSize + "px Arial";
             const yPos = (canvas.height * yPercentage) / 100;
             ctx.fillText(element.textContent, canvas.width / 2, yPos);
         }
         
-        drawText('receiver', document.getElementById('receiver-slider').value);
-        drawText('expiry', document.getElementById('expiry-slider').value);
-        drawText('gifter', document.getElementById('gifter-slider').value);
+        drawText('receiver', parseFloat(document.getElementById('receiver-slider').value));
+        drawText('expiry', parseFloat(document.getElementById('expiry-slider').value));
+        drawText('gifter', parseFloat(document.getElementById('gifter-slider').value));
         
         canvas.toBlob(function(blob) {
             const file = new File([blob], "gift-card.png", { type: "image/png" });
             callback(file);
         }, "image/png");
+        
     }
         
         function shareOnWhatsApp() {
