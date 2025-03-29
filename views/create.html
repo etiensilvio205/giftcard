@@ -233,7 +233,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
             const canvasWidth = bgImage.width;
             const canvasHeight = bgImage.height;
 
-            bgImage.onload = function() {
+
                 // Image is loaded, now render it on the canvas
                 html2canvas(cardContainer, {
                     scale: 4,
@@ -248,7 +248,6 @@ let receiverFontSize = 18;  // Default font size for receiver text
                 }).catch(function(error) {
                     console.error("Error rendering canvas:", error);
                     });
-            };
 
         }; 
 
