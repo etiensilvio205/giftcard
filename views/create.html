@@ -170,7 +170,7 @@
         </div>
     </div>
     <canvas id="cardCanvas"></canvas>
-
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/0.4.1/html2canvas.min.js"></script>
     <script>
 
 let receiverFontSize = 18;  // Default font size for receiver text
@@ -217,39 +217,40 @@ let receiverFontSize = 18;  // Default font size for receiver text
         
 
 
-        function saveCard(callback) {
-        const canvas = document.getElementById('cardCanvas');
-        const ctx = canvas.getContext('2d');
-        canvas.width = bgImage.naturalWidth;
-        canvas.height = bgImage.naturalHeight;
-
-        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-
-        ctx.fillStyle = "black";
-        ctx.textAlign = "center";
-
-        // Function to draw text with the correct font size and position
-        function drawText(id, sliderId, fontSize) {
-            const element = document.getElementById(id);
-            const yPercentage = parseFloat(document.getElementById(sliderId).value);
-            const yPos = (canvas.height * yPercentage) / 100;
-
-            ctx.font = fontSize + "px Arial";
-            ctx.fillText(element.textContent, canvas.width / 2, yPos);
-        }
-
-        // Draw each text field with the corresponding font size
-        drawText('receiver', 'receiver-slider', receiverFontSize);
-        drawText('expiry', 'expiry-slider', expiryFontSize);
-        drawText('gifter', 'gifter-slider', gifterFontSize);
-
-        // Save the canvas as an image
-        canvas.toBlob(function (blob) {
-            const file = new File([blob], "gift-card.png", { type: "image/png" });
-            callback(file);
-        }, "image/png");
-    }
+            // Function to save the card exactly as it appears on the screen in high quality
+    function saveCard(callback) {
+        const cardContainer = document.getElementById('card-container');
         
+        // Get the original background image size
+        const bgImage = new Image();
+        bgImage.src = 'background2.jpg'; // Replace with your image path if needed
+        
+        bgImage.onload = function() {
+            // Set canvas dimensions to match the background image size
+            const canvasWidth = bgImage.width;
+            const canvasHeight = bgImage.height;
+
+            // Use html2canvas to render the card at the correct size
+            html2canvas(cardContainer, {
+                width: canvasWidth, // Set the canvas width to the background image width
+                height: canvasHeight, // Set the canvas height to the background image height
+                x: 0,
+                y: 0,
+                scale: 4, // Increase scale for high quality (higher scale = higher resolution)
+                useCORS: true, // Allow cross-origin images to be rendered
+                logging: false, // Disable logging for cleaner output
+                letterRendering: 1, // Improve text rendering quality
+            }).then(function(canvas) {
+                // Convert the canvas to a blob (image file)
+                canvas.toBlob(function(blob) {
+                    const file = new File([blob], "gift-card.png", { type: "image/png" });
+                    callback(file);
+                }, "image/png");
+            });
+        };
+    }
+
+ 
         function shareOnWhatsApp() {
             saveCard(function(file) {
                 const dataTransfer = new DataTransfer();
@@ -277,33 +278,16 @@ let receiverFontSize = 18;  // Default font size for receiver text
         //    const element = document.getElementById(id);
         //    element.style.top = value + '%';
         //}
-        //function changeFontSize(id, change) {
-        //    const element = document.getElementById(id);
-         //   const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
-         //   const newSize = currentSize + change;
-         //   if (newSize >= 10 && newSize <= 100) { // Set limits for font size
-        //        element.style.fontSize = newSize + 'px';
-         //   }
-        //}
-
-
-    // Function to change font size (called when + or - is clicked)
-    function changeFontSize(id, change) {
-        // Adjust the font size based on the id (receiver, expiry, gifter)
-        if (id === 'receiver') {
-            receiverFontSize += change;
-            if (receiverFontSize < 10) receiverFontSize = 10;  // Set a minimum font size
-            document.getElementById(id).style.fontSize = receiverFontSize + 'px';
-        } else if (id === 'expiry') {
-            expiryFontSize += change;
-            if (expiryFontSize < 10) expiryFontSize = 10;
-            document.getElementById(id).style.fontSize = expiryFontSize + 'px';
-        } else if (id === 'gifter') {
-            gifterFontSize += change;
-            if (gifterFontSize < 10) gifterFontSize = 10;
-            document.getElementById(id).style.fontSize = gifterFontSize + 'px';
+        function changeFontSize(id, change) {
+            const element = document.getElementById(id);
+            const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+            const newSize = currentSize + change;
+            if (newSize >= 10 && newSize <= 100) { // Set limits for font size
+                element.style.fontSize = newSize + 'px';
+            }
         }
-    }
+
+
 
 
     // Ensure sliders update positions
