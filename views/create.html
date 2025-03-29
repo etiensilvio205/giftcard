@@ -210,36 +210,52 @@
             document.getElementById('form-container').style.display = 'none';
         }
         
-        function saveCard() {
-            const canvas = document.getElementById('cardCanvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = bgImage.naturalWidth;
-            canvas.height = bgImage.naturalHeight;
-            
-            let bgImage = new Image();
-            bgImage.src = document.getElementById('card-container').style.backgroundImage.slice(5, -2);
-            bgImage.onload = function() {
-                ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-                ctx.fillStyle = "black";
-                ctx.textAlign = "center";
-                ctx.font = "bold 18px Poppins";
-                
-                function drawText(id, yOffset) {
-                    const textElement = document.getElementById(id);
-                    const fontSize = parseInt(window.getComputedStyle(textElement).fontSize, 10);
-                    ctx.font = `bold ${fontSize}px Poppins`;
-                    const yPos = (parseFloat(textElement.style.top) / 100) * canvas.height;
-                    ctx.fillText(textElement.textContent, canvas.width / 2, yPos);
-                }
-                
-                drawText('receiver');
-                drawText('expiry');
-                drawText('gifter');
-            };
+        function saveCard(callback) {
+        const canvas = document.getElementById('cardCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = bgImage.naturalWidth;
+        canvas.height = bgImage.naturalHeight;
+        
+        ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
+        
+        ctx.fillStyle = "black";
+        ctx.textAlign = "center";
+        
+        function drawText(id, defaultFontSize, yPercentage) {
+            const element = document.getElementById(id);
+            const fontSize = parseInt(window.getComputedStyle(element).fontSize, 10);
+            ctx.font = fontSize + "px Arial";
+            const yPos = (canvas.height * yPercentage) / 100;
+            ctx.fillText(element.textContent, canvas.width / 2, yPos);
         }
         
+        drawText('receiver', 150, document.getElementById('receiver-slider').value);
+        drawText('expiry', 50, document.getElementById('expiry-slider').value);
+        drawText('gifter', 50, document.getElementById('gifter-slider').value);
+        
+        canvas.toBlob(function(blob) {
+            const file = new File([blob], "gift-card.png", { type: "image/png" });
+            callback(file);
+        }, "image/png");
+    }
+        
         function shareOnWhatsApp() {
-            saveCard();
+            saveCard(function(file) {
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.files = dataTransfer.files;
+                
+                if (navigator.share) {
+                    navigator.share({
+                        files: input.files,
+                        text: "Check out this gift card!"
+                    }).catch(console.error);
+                } else {
+                    alert("Your browser does not support direct WhatsApp image sharing.");
+                }
+            });
         }
 
         function closeForm() {
