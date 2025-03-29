@@ -215,31 +215,35 @@
         const ctx = canvas.getContext('2d');
         canvas.width = bgImage.naturalWidth;
         canvas.height = bgImage.naturalHeight;
-        
+
         ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
-        
+
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
-        
-        function drawText(id, yPercentage) {
+
+        // Function to draw text with proper font size and position
+        function drawText(id, sliderId) {
             const element = document.getElementById(id);
-            let fontSize = element.style.fontSize ? parseInt(element.style.fontSize, 10) : parseInt(window.getComputedStyle(element).fontSize, 10);
-            fontSize = Math.max(fontSize, 10); // Ensure a minimum font size
-            ctx.font = fontSize + "px Arial";
+            const fontSize = parseInt(element.style.fontSize, 10) || 18; // Get user-set font size, default 18
+            const yPercentage = parseFloat(document.getElementById(sliderId).value); // Get slider value for position
             const yPos = (canvas.height * yPercentage) / 100;
+
+            ctx.font = fontSize + "px Arial";
             ctx.fillText(element.textContent, canvas.width / 2, yPos);
         }
-        
-        drawText('receiver', parseFloat(document.getElementById('receiver-slider').value));
-        drawText('expiry', parseFloat(document.getElementById('expiry-slider').value));
-        drawText('gifter', parseFloat(document.getElementById('gifter-slider').value));
-        
-        canvas.toBlob(function(blob) {
+
+        // Draw each text field
+        drawText('receiver', 'receiver-slider');
+        drawText('expiry', 'expiry-slider');
+        drawText('gifter', 'gifter-slider');
+
+        // Save the canvas as an image
+        canvas.toBlob(function (blob) {
             const file = new File([blob], "gift-card.png", { type: "image/png" });
             callback(file);
         }, "image/png");
-        
     }
+
         
         function shareOnWhatsApp() {
             saveCard(function(file) {
