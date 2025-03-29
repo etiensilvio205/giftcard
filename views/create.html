@@ -176,7 +176,7 @@
 let receiverFontSize = 18;  // Default font size for receiver text
     let expiryFontSize = 18;    // Default font size for expiry text
     let gifterFontSize = 18;    // Default font size for gifter text 
-    
+
         let bgImage = new Image();
         bgImage.src = 'background2.jpg';
         bgImage.onload = function() {
@@ -217,8 +217,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
         
 
 
-    // Function to save the card
-    function saveCard(callback) {
+        function saveCard(callback) {
         const canvas = document.getElementById('cardCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = bgImage.naturalWidth;
@@ -229,7 +228,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
         ctx.fillStyle = "black";
         ctx.textAlign = "center";
 
-        // Function to draw text on canvas with updated font size and position
+        // Function to draw text with the correct font size and position
         function drawText(id, sliderId, fontSize) {
             const element = document.getElementById(id);
             const yPercentage = parseFloat(document.getElementById(sliderId).value);
@@ -239,7 +238,7 @@ let receiverFontSize = 18;  // Default font size for receiver text
             ctx.fillText(element.textContent, canvas.width / 2, yPos);
         }
 
-        // Draw each text field
+        // Draw each text field with the corresponding font size
         drawText('receiver', 'receiver-slider', receiverFontSize);
         drawText('expiry', 'expiry-slider', expiryFontSize);
         drawText('gifter', 'gifter-slider', gifterFontSize);
@@ -287,22 +286,25 @@ let receiverFontSize = 18;  // Default font size for receiver text
          //   }
         //}
 
-        // Change font size for the receiver text
+
+    // Function to change font size (called when + or - is clicked)
     function changeFontSize(id, change) {
+        // Adjust the font size based on the id (receiver, expiry, gifter)
         if (id === 'receiver') {
             receiverFontSize += change;
-            if (receiverFontSize < 10) receiverFontSize = 10;  // Ensure font size doesn't go below 10px
+            if (receiverFontSize < 10) receiverFontSize = 10;  // Set a minimum font size
+            document.getElementById(id).style.fontSize = receiverFontSize + 'px';
         } else if (id === 'expiry') {
             expiryFontSize += change;
             if (expiryFontSize < 10) expiryFontSize = 10;
+            document.getElementById(id).style.fontSize = expiryFontSize + 'px';
         } else if (id === 'gifter') {
             gifterFontSize += change;
             if (gifterFontSize < 10) gifterFontSize = 10;
+            document.getElementById(id).style.fontSize = gifterFontSize + 'px';
         }
-
-        const element = document.getElementById(id);
-        element.style.fontSize = receiverFontSize + 'px';  // Update the displayed font size
     }
+
 
     // Ensure sliders update positions
     function updateTextPosition(id, value) {
