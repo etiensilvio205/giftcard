@@ -210,24 +210,24 @@
             document.getElementById('form-container').style.display = 'none';
         }
         
-        function saveCard(callback) {
+        function saveCard() {
             const canvas = document.getElementById('cardCanvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 600;
-            canvas.height = 900;
-
+            canvas.width = bgImage.naturalWidth;
+            canvas.height = bgImage.naturalHeight;
+            
             let bgImage = new Image();
             bgImage.src = document.getElementById('card-container').style.backgroundImage.slice(5, -2);
             bgImage.onload = function() {
                 ctx.drawImage(bgImage, 0, 0, canvas.width, canvas.height);
                 ctx.fillStyle = "black";
                 ctx.textAlign = "center";
-                ctx.font = "bold 18px Poppins, sans-serif";
+                ctx.font = "bold 18px Poppins";
                 
-                function drawText(id) {
+                function drawText(id, yOffset) {
                     const textElement = document.getElementById(id);
                     const fontSize = parseInt(window.getComputedStyle(textElement).fontSize, 10);
-                    ctx.font = `bold ${fontSize}px Poppins, sans-serif`;
+                    ctx.font = `bold ${fontSize}px Poppins`;
                     const yPos = (parseFloat(textElement.style.top) / 100) * canvas.height;
                     ctx.fillText(textElement.textContent, canvas.width / 2, yPos);
                 }
@@ -235,31 +235,11 @@
                 drawText('receiver');
                 drawText('expiry');
                 drawText('gifter');
-                
-                canvas.toBlob(function(blob) {
-                    const file = new File([blob], "gift-card.png", { type: "image/png" });
-                    callback(file);
-                }, "image/png");
             };
         }
         
         function shareOnWhatsApp() {
-            saveCard(function(file) {
-                const dataTransfer = new DataTransfer();
-                dataTransfer.items.add(file);
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.files = dataTransfer.files;
-                
-                if (navigator.share) {
-                    navigator.share({
-                        files: input.files,
-                        text: "Check out this gift card!"
-                    }).catch(console.error);
-                } else {
-                    alert("Your browser does not support direct WhatsApp image sharing.");
-                }
-            });
+            saveCard()
         }
 
         function closeForm() {
