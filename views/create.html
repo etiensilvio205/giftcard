@@ -16,6 +16,7 @@
         }
         .card-container {
             position: relative;
+            display: inline-block;
         }
         .card {
             position: relative;
@@ -85,7 +86,10 @@
         }
         function shareCard() {
             const card = document.getElementById('giftCard');
-            html2canvas(card, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
+            const img = document.getElementById('cardImage');
+            const originalWidth = img.naturalWidth;
+            const originalHeight = img.naturalHeight;
+            html2canvas(card, { width: originalWidth, height: originalHeight, scale: 1, useCORS: true, backgroundColor: null }).then(canvas => {
                 const link = document.createElement("a");
                 link.href = canvas.toDataURL("image/png");
                 link.download = "gift_card.png";
