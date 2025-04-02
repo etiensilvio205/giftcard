@@ -95,18 +95,26 @@
         function shareCard() {
             const card = document.getElementById('giftCard');
             html2canvas(card, { scale: 2, useCORS: true }).then(canvas => {
-                canvas.toBlob(blob => {
-                    const file = new File([blob], "gift_card.png", { type: "image/png" });
-                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
-                        navigator.share({ files: [file], title: "Gift Card" })
-                            .catch(error => console.log("Sharing failed", error));
-                    } else {
-                        const link = document.createElement("a");
-                        link.href = URL.createObjectURL(blob);
-                        link.download = "gift_card.png";
-                        link.click();
-                    }
-                });
+                const image = canvas.toDataURL("image/png");
+                const link = document.createElement("a");
+                link.href = image;
+                link.download = "gift_card.png";
+                link.click();
+
+                if (navigator.share) {
+                    fetch(image)
+                        .then(res => res.blob())
+                        .then(blob => {
+                            const file = new File([blob], "gift_card.png", { type: "image/png" });
+                            navigator.share({
+                                files: [file],
+                                title: "Gift Card",
+                                text: "Here's your personalized gift card!"
+                            }).catch(err => console.error("Sharing failed", err));
+                        });
+                } else {
+                    alert("Sharing is not supported on this browser. The image has been downloaded instead.");
+                }
             });
         }
     </script>
