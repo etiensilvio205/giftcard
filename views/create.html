@@ -16,17 +16,22 @@
         }
         .card {
             position: relative;
-            width: 400px;
-            height: 300px;
-            background: url('background2.jpg') no-repeat center center/cover;
+            width: 600px;
+            height: 400px;
+            background: url('background2.jpg') no-repeat center center;
+            background-size: cover;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
         .text {
             position: absolute;
-            left: 50%;
-            transform: translateX(-50%);
-            color: white;
+            color: black;
             font-size: 24px;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            font-weight: bold;
+            text-align: center;
+            white-space: nowrap;
         }
         .controls {
             margin-top: 20px;
@@ -39,9 +44,9 @@
 </head>
 <body>
     <div class="card" id="giftCard">
-        <p id="receiver" class="text" style="top: 50px;">Receiver</p>
-        <p id="gifter" class="text" style="top: 100px;">Gifter</p>
-        <p id="expiry" class="text" style="top: 150px;">Expiry Date</p>
+        <p id="receiver" class="text" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">Receiver</p>
+        <p id="gifter" class="text" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">Gifter</p>
+        <p id="expiry" class="text" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">Expiry Date</p>
     </div>
     <div class="controls">
         <div>
@@ -75,21 +80,20 @@
             let element = document.getElementById(id);
             let style = window.getComputedStyle(element);
             let fontSize = parseInt(style.fontSize);
-            let top = parseInt(style.top);
+            let top = parseInt(element.style.top);
             if (type === "grow") element.style.fontSize = (fontSize + 2) + "px";
             if (type === "shrink") element.style.fontSize = (fontSize - 2) + "px";
-            if (type === "up") element.style.top = (top - 5) + "px";
-            if (type === "down") element.style.top = (top + 5) + "px";
+            if (type === "up") element.style.top = (top - 5) + "%";
+            if (type === "down") element.style.top = (top + 5) + "%";
         }
         function shareCard() {
-            html2canvas(document.getElementById('giftCard')).then(canvas => {
+            const card = document.getElementById('giftCard');
+            html2canvas(card, { scale: 2, useCORS: true }).then(canvas => {
                 canvas.toBlob(blob => {
                     const file = new File([blob], "gift_card.png", { type: "image/png" });
-                    const data = {
-                        files: [file]
-                    };
-                    if (navigator.canShare && navigator.canShare(data)) {
-                        navigator.share(data).catch(error => console.log("Sharing failed", error));
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({ files: [file], title: "Gift Card" })
+                            .catch(error => console.log("Sharing failed", error));
                     } else {
                         const link = document.createElement("a");
                         link.href = URL.createObjectURL(blob);
