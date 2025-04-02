@@ -10,266 +10,96 @@
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            height: 100vh;
-            font-family: 'Poppins', sans-serif;
-            background-color: #f4f4f4;
+            min-height: 100vh;
+            background-color: #f0f0f0;
+            font-family: Arial, sans-serif;
+        }
+        .card {
             position: relative;
+            width: 400px;
+            height: 300px;
+            background: url('background2.jpg') no-repeat center center/cover;
         }
-        button {
-            padding: 8.5px 17px;
-            font-size: 13.6px;
-            background-color: red;
-            color: white;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            margin: 10px;
-        }
-        button:hover {
-            background-color: darkred;
-        }
-        #form-container {
+        .text {
             position: absolute;
-            top: 50%;
             left: 50%;
-            transform: translate(-50%, -50%);
-            background: rgba(255, 255, 255, 0.9);
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            display: none;
-            z-index: 10;
-            width: 80%;
-            max-width: 300px;
+            transform: translateX(-50%);
+            color: white;
+            font-size: 24px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
         }
-        input {
-            display: block;
-            width: 90%;
-            padding: 10px;
-            margin: 10px auto;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            text-align: center;
+        .controls {
+            margin-top: 20px;
         }
-        #card-container {
-            position: relative;
-            width: 100%;
-            max-width: 300px;
-            height: auto;
-            aspect-ratio: 2/3;
-            background-image: url('background2.jpg');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
+        .controls input {
+            padding: 5px;
+            margin-right: 10px;
         }
-        .overlay-text {
-            position: absolute;
-            width: 100%;
-            color: black;
-            font-size: 18px;
-            font-weight: bold;
-            text-align: center;
-        }
-        #receiver { top: 30%; }
-        #expiry { top: 50%; }
-        #gifter { top: 80%; }
-        canvas {
-            display: none;
-        }
-        .button-container {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-top: 10px; /* Adjust spacing between the image and buttons */
-            width: 100%; /* Match the width of the card container */
-            max-width: 300px; /* Ensure it aligns with the card's max width */
-       }
-       .slider-container {
-        display: flex;
-        flex-direction: column;
-        gap: 1px; /* Reduced spacing between sliders */
-        width: 90%;
-        max-width: 250px;
-        margin-top: 5px;
-    }
-    .slider-container label {
-        font-size: 12px; /* Reduced text size */
-        color: black;
-    }
-
-    .slider-container input[type="range"]::-moz-range-thumb {
-        width: 15px;
-        height: 15px;
-        background: #fff;
-        border: 2px solid red;
-        border-radius: 50%;
-        cursor: pointer;
-    }
-
-    .slider-container input[type="range"]::-webkit-slider-thumb {
-        -webkit-appearance: none;
-        appearance: none;
-        width: 15px;
-        height: 15px;
-        background: #fff;
-        border: 2px solid red; /* Thumb border matches slider color */
-        border-radius: 50%;
-        cursor: pointer;
-    }
-    
     </style>
-     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-
 </head>
 <body>
-    <div id="card-container">
-        <div class="overlay-text" id="receiver"></div>
-        <div class="overlay-text" id="expiry"></div>
-        <div class="overlay-text" id="gifter"></div>
+    <div class="card" id="giftCard">
+        <p id="receiver" class="text" style="top: 50px;">Receiver</p>
+        <p id="gifter" class="text" style="top: 100px;">Gifter</p>
+        <p id="expiry" class="text" style="top: 150px;">Expiry Date</p>
     </div>
-    <div class="button-container">
-        <button onclick="showForm()">Edit..</button>
-        <button onclick="shareOnWhatsApp()">Share</button>
-    </div>
-    
-    <div id="form-container">
-        <h2>Card details</h2>
-        <input type="file" id="bg-upload" accept="image/*">
-        <input type="text" id="receiver-input" placeholder="Receiver's Name">
-        <input type="date" id="expiry-input">
-        <input type="text" id="gifter-input" placeholder="Gifter's Name">
-        <button onclick="generateCard()">Generate</button>
-        <button onclick="closeForm()" >X</button>
-    </div>
-    <div class="slider-container">
-        <!-- Receiver Slider -->
-        <label for="receiver-slider">Receiver Position:</label>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <button onclick="changeFontSize('receiver', -2)">-</button>
-            <input type="range" id="receiver-slider" min="0" max="100" value="30" oninput="updateTextPosition('receiver', this.value)" style="flex: 1;">
-            <button onclick="changeFontSize('receiver', 2)">+</button>
+    <div class="controls">
+        <div>
+            <input type="text" id="receiverInput" placeholder="Receiver" oninput="updateText('receiver', this.value)">
+            <button onclick="adjustText('receiver', 'grow')">+</button>
+            <button onclick="adjustText('receiver', 'shrink')">-</button>
+            <button onclick="adjustText('receiver', 'up')">⬆</button>
+            <button onclick="adjustText('receiver', 'down')">⬇</button>
         </div>
-    
-        <!-- Expiry Slider -->
-        <label for="expiry-slider">Expiry Position:</label>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <button onclick="changeFontSize('expiry', -2)">-</button>
-            <input type="range" id="expiry-slider" min="0" max="100" value="50" oninput="updateTextPosition('expiry', this.value)" style="flex: 1;">
-            <button onclick="changeFontSize('expiry', 2)">+</button>
+        <div>
+            <input type="text" id="gifterInput" placeholder="Gifter" oninput="updateText('gifter', this.value)">
+            <button onclick="adjustText('gifter', 'grow')">+</button>
+            <button onclick="adjustText('gifter', 'shrink')">-</button>
+            <button onclick="adjustText('gifter', 'up')">⬆</button>
+            <button onclick="adjustText('gifter', 'down')">⬇</button>
         </div>
-    
-        <!-- Gifter Slider -->
-        <label for="gifter-slider">Gifter Position:</label>
-        <div style="display: flex; align-items: center; gap: 5px;">
-            <button onclick="changeFontSize('gifter', -2)">-</button>
-            <input type="range" id="gifter-slider" min="0" max="100" value="80" oninput="updateTextPosition('gifter', this.value)" style="flex: 1;">
-            <button onclick="changeFontSize('gifter', 2)">+</button>
+        <div>
+            <input type="text" id="expiryInput" placeholder="Expiry Date" oninput="updateText('expiry', this.value)">
+            <button onclick="adjustText('expiry', 'grow')">+</button>
+            <button onclick="adjustText('expiry', 'shrink')">-</button>
+            <button onclick="adjustText('expiry', 'up')">⬆</button>
+            <button onclick="adjustText('expiry', 'down')">⬇</button>
         </div>
+        <button onclick="shareCard()" style="margin-top: 10px;">Share</button>
     </div>
-    <canvas id="cardCanvas"></canvas>
-   
-   <script>
-        let bgImage = new Image();
-        bgImage.src = 'background2.jpg';
-        bgImage.onload = function() {
-            document.getElementById('card-container').style.backgroundImage = `url('background2.jpg')`;
-        };
-        
-function showForm() {
-    document.getElementById('form-container').style.display = 'block';
-    let expiryInput = document.getElementById('expiry-input');
-    if (!expiryInput.value) {
-        let today = new Date();
-        today.setMonth(today.getMonth() + 1);
-        expiryInput.value = today.toISOString().split('T')[0];
-    }
-}
-
-document.getElementById('bg-upload').addEventListener('change', function(event) {
-    const file = event.target.files[0];
-    if (file) {
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            bgImage = new Image();
-            bgImage.src = e.target.result;
-            bgImage.onload = function() {
-                document.getElementById('card-container').style.backgroundImage = `url(${e.target.result})`;
-            };
-        };
-        reader.readAsDataURL(file);
-    }
-});
-
-function generateCard() {
-    document.getElementById('receiver').textContent = document.getElementById('receiver-input').value;
-    document.getElementById('expiry').textContent = 'Date de validité: ' + document.getElementById('expiry-input').value;
-    document.getElementById('gifter').textContent = 'Conseiller: ' + document.getElementById('gifter-input').value;
-    document.getElementById('form-container').style.display = 'none';
-}
-
-function downloadCanvas() {
-            const cardContainer = document.getElementById('card-container');
-            
-            // Use html2canvas to render the card as a canvas
-            html2canvas(cardContainer).then(function(canvas) {
-                const imageUrl = canvas.toDataURL('image/png');
-                const link = document.createElement('a');
-                link.href = imageUrl;
-                link.download = 'gift-card.png';
-                link.click();
-            }).catch(function(error) {
-                console.error("Error rendering canvas:", error);
+    <script>
+        function updateText(id, value) {
+            document.getElementById(id).textContent = value;
+        }
+        function adjustText(id, type) {
+            let element = document.getElementById(id);
+            let style = window.getComputedStyle(element);
+            let fontSize = parseInt(style.fontSize);
+            let top = parseInt(style.top);
+            if (type === "grow") element.style.fontSize = (fontSize + 2) + "px";
+            if (type === "shrink") element.style.fontSize = (fontSize - 2) + "px";
+            if (type === "up") element.style.top = (top - 5) + "px";
+            if (type === "down") element.style.top = (top + 5) + "px";
+        }
+        function shareCard() {
+            html2canvas(document.getElementById('giftCard')).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], "gift_card.png", { type: "image/png" });
+                    const data = {
+                        files: [file]
+                    };
+                    if (navigator.canShare && navigator.canShare(data)) {
+                        navigator.share(data).catch(error => console.log("Sharing failed", error));
+                    } else {
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(blob);
+                        link.download = "gift_card.png";
+                        link.click();
+                    }
+                });
             });
         }
-
-        // Share via WhatsApp or browser share API
-        function shareOnWhatsApp() {
-    const cardContainer = document.getElementById('card-container');
-    
-    html2canvas(cardContainer).then(function(canvas) {
-        canvas.toBlob(function(blob) {
-            const file = new File([blob], "gift-card.png", { type: "image/png" });
-
-            // Check if Web Share API is available
-            if (navigator.share) {
-                // For mobile sharing via Web Share API
-                navigator.share({
-                    files: [file],
-                    text: "Check out this gift card!"
-                }).catch(console.error);
-            } else {
-                // If Web Share is not available, show a fallback message
-                alert("Your browser doesn't support sharing directly. You can download the card and share it manually.");
-                downloadCanvas(); // Automatically trigger the download if sharing isn't available
-            }
-        });
-    }).catch(function(error) {
-        console.error("Error rendering canvas:", error);
-    });
-}
-
-function closeForm() {
-    document.getElementById('form-container').style.display = 'none';
-}
-
-function changeFontSize(id, change) {
-    const element = document.getElementById(id);
-    const currentSize = parseInt(window.getComputedStyle(element).fontSize, 10);
-    const newSize = currentSize + change;
-    if (newSize >= 10 && newSize <= 100) {
-        element.style.fontSize = newSize + 'px';
-    }
-}
-
-function updateTextPosition(id, value) {
-    const element = document.getElementById(id);
-    element.style.top = value + '%';
-}
     </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 </body>
 </html>
