@@ -15,19 +15,16 @@
             font-family: Arial, sans-serif;
         }
         .card-container {
-            width: 600px;
-            height: 400px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             position: relative;
         }
         .card {
-            width: 100%;
-            height: 100%;
-            background: url('background2.jpg') no-repeat center center;
-            background-size: contain;
             position: relative;
+            display: inline-block;
+        }
+        .card img {
+            display: block;
+            width: 100%;
+            height: auto;
         }
         .text {
             position: absolute;
@@ -37,18 +34,12 @@
             text-align: center;
             white-space: nowrap;
         }
-        .controls {
-            margin-top: 20px;
-        }
-        .controls input {
-            padding: 5px;
-            margin-right: 10px;
-        }
     </style>
 </head>
 <body>
-    <div class="card-container">
-        <div class="card" id="giftCard">
+    <div class="card-container" id="giftCard">
+        <div class="card">
+            <img src="background2.jpg" id="cardImage">
             <p id="receiver" class="text" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">Receiver</p>
             <p id="gifter" class="text" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">Gifter</p>
             <p id="expiry" class="text" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">Expiry Date</p>
@@ -94,27 +85,11 @@
         }
         function shareCard() {
             const card = document.getElementById('giftCard');
-            html2canvas(card, { scale: 2, useCORS: true }).then(canvas => {
-                const image = canvas.toDataURL("image/png");
+            html2canvas(card, { scale: 2, useCORS: true, backgroundColor: null }).then(canvas => {
                 const link = document.createElement("a");
-                link.href = image;
+                link.href = canvas.toDataURL("image/png");
                 link.download = "gift_card.png";
                 link.click();
-
-                if (navigator.share) {
-                    fetch(image)
-                        .then(res => res.blob())
-                        .then(blob => {
-                            const file = new File([blob], "gift_card.png", { type: "image/png" });
-                            navigator.share({
-                                files: [file],
-                                title: "Gift Card",
-                                text: "Here's your personalized gift card!"
-                            }).catch(err => console.error("Sharing failed", err));
-                        });
-                } else {
-                    alert("Sharing is not supported on this browser. The image has been downloaded instead.");
-                }
             });
         }
     </script>
