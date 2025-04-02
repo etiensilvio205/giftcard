@@ -14,16 +14,20 @@
             background-color: #f0f0f0;
             font-family: Arial, sans-serif;
         }
-        .card {
-            position: relative;
+        .card-container {
             width: 600px;
             height: 400px;
-            background: url('background2.jpg') no-repeat center center;
-            background-size: cover;
             display: flex;
             align-items: center;
             justify-content: center;
-            overflow: hidden;
+            position: relative;
+        }
+        .card {
+            width: 100%;
+            height: 100%;
+            background: url('background2.jpg') no-repeat center center;
+            background-size: contain;
+            position: relative;
         }
         .text {
             position: absolute;
@@ -43,10 +47,12 @@
     </style>
 </head>
 <body>
-    <div class="card" id="giftCard">
-        <p id="receiver" class="text" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">Receiver</p>
-        <p id="gifter" class="text" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">Gifter</p>
-        <p id="expiry" class="text" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">Expiry Date</p>
+    <div class="card-container">
+        <div class="card" id="giftCard">
+            <p id="receiver" class="text" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">Receiver</p>
+            <p id="gifter" class="text" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">Gifter</p>
+            <p id="expiry" class="text" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">Expiry Date</p>
+        </div>
     </div>
     <div class="controls">
         <div>
