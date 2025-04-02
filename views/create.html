@@ -17,10 +17,14 @@
         .card-container {
             position: relative;
             display: inline-block;
+            margin-bottom: 20px;
         }
         .card {
             position: relative;
             display: inline-block;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
         }
         .card img {
             display: block;
@@ -35,6 +39,40 @@
             text-align: center;
             white-space: nowrap;
         }
+        .controls {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            max-width: 400px;
+        }
+        .control-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            justify-content: center;
+        }
+        input {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            width: 60%;
+        }
+        button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: #007BFF;
+            color: white;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
     </style>
 </head>
 <body>
@@ -47,28 +85,28 @@
         </div>
     </div>
     <div class="controls">
-        <div>
+        <div class="control-group">
             <input type="text" id="receiverInput" placeholder="Receiver" oninput="updateText('receiver', this.value)">
             <button onclick="adjustText('receiver', 'grow')">+</button>
             <button onclick="adjustText('receiver', 'shrink')">-</button>
             <button onclick="adjustText('receiver', 'up')">⬆</button>
             <button onclick="adjustText('receiver', 'down')">⬇</button>
         </div>
-        <div>
+        <div class="control-group">
             <input type="text" id="gifterInput" placeholder="Gifter" oninput="updateText('gifter', this.value)">
             <button onclick="adjustText('gifter', 'grow')">+</button>
             <button onclick="adjustText('gifter', 'shrink')">-</button>
             <button onclick="adjustText('gifter', 'up')">⬆</button>
             <button onclick="adjustText('gifter', 'down')">⬇</button>
         </div>
-        <div>
+        <div class="control-group">
             <input type="text" id="expiryInput" placeholder="Expiry Date" oninput="updateText('expiry', this.value)">
             <button onclick="adjustText('expiry', 'grow')">+</button>
             <button onclick="adjustText('expiry', 'shrink')">-</button>
             <button onclick="adjustText('expiry', 'up')">⬆</button>
             <button onclick="adjustText('expiry', 'down')">⬇</button>
         </div>
-        <button onclick="shareCard()" style="margin-top: 10px;">Share</button>
+        <button onclick="shareCard()" style="margin-top: 10px; width: 100%;">Share</button>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
@@ -82,17 +120,25 @@
             let top = parseInt(element.style.top);
             if (type === "grow") element.style.fontSize = (fontSize + 2) + "px";
             if (type === "shrink") element.style.fontSize = (fontSize - 2) + "px";
-            if (type === "up") element.style.top = (top - 5) + "%";
-            if (type === "down") element.style.top = (top + 5) + "%";
+            if (type === "up") element.style.top = (top - 1) + "%";
+            if (type === "down") element.style.top = (top + 1) + "%";
         }
         function shareCard() {
             const card = document.getElementById('giftCard');
-            const img = document.getElementById('cardImage');
-            html2canvas(card, { scale: img.naturalWidth / card.clientWidth, useCORS: true, backgroundColor: null }).then(canvas => {
-                const link = document.createElement("a");
-                link.href = canvas.toDataURL("image/png");
-                link.download = "gift_card.png";
-                link.click();
+            html2canvas(card, { useCORS: true, backgroundColor: null }).then(canvas => {
+                canvas.toBlob(blob => {
+                    const file = new File([blob], "gift_card.png", { type: "image/png" });
+                    if (navigator.canShare && navigator.canShare({ files: [file] })) {
+                        navigator.share({ files: [file], title: "My Gift Card" })
+                            .catch(error => console.log("Sharing failed", error));
+                    } else {
+                        const link = document.createElement("a");
+                        link.href = URL.createObjectURL(blob);
+                        link.download = "gift_card.png";
+                        link.click();
+                        alert("Image saved. You can share it manually.");
+                    }
+                }, "image/png");
             });
         }
     </script>
