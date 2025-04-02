@@ -70,6 +70,7 @@
         </div>
         <button onclick="shareCard()" style="margin-top: 10px;">Share</button>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
         function updateText(id, value) {
             document.getElementById(id).textContent = value;
@@ -85,27 +86,14 @@
             if (type === "down") element.style.top = (top + 5) + "%";
         }
         function shareCard() {
-            const card = document.createElement('canvas');
+            const card = document.getElementById('giftCard');
             const img = document.getElementById('cardImage');
-            card.width = img.naturalWidth;
-            card.height = img.naturalHeight;
-            const ctx = card.getContext('2d');
-            ctx.drawImage(img, 0, 0, card.width, card.height);
-            
-            document.querySelectorAll('.text').forEach(text => {
-                const fontSize = parseInt(window.getComputedStyle(text).fontSize);
-                ctx.font = `${fontSize}px Arial`;
-                ctx.fillStyle = 'black';
-                ctx.textAlign = 'center';
-                const x = (parseFloat(text.style.left) / 100) * card.width;
-                const y = (parseFloat(text.style.top) / 100) * card.height;
-                ctx.fillText(text.textContent, x, y);
+            html2canvas(card, { scale: img.naturalWidth / card.clientWidth, useCORS: true, backgroundColor: null }).then(canvas => {
+                const link = document.createElement("a");
+                link.href = canvas.toDataURL("image/png");
+                link.download = "gift_card.png";
+                link.click();
             });
-            
-            const link = document.createElement("a");
-            link.href = card.toDataURL("image/png");
-            link.download = "gift_card.png";
-            link.click();
         }
     </script>
 </body>
