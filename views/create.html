@@ -82,7 +82,7 @@
             <img src="background2.jpg" id="cardImage">
             <p id="receiver" class="text" style="top: 35%; left: 50%; transform: translate(-50%, -50%);"></p>
             <p id="gifter" class="text" style="top: 85%; left: 50%; transform: translate(-50%, -50%);"></p>
-            <p id="expiry" class="text" style="top: 90%; left: 50%; transform: translate(-50%, -50%);"></p>
+            <p id="expiry" class="text" font-size="18px" style="top: 90%; left: 50%; transform: translate(-50%, -50%);"></p>
         </div>
     </div>
     <div class="controls">
@@ -150,9 +150,9 @@
             let month = String(today.getMonth() + 1).padStart(2, '0');
             let day = String(today.getDate()).padStart(2, '0');
 
-            let futureDate = `${year}-${month}-${day}`;
+            let futureDate = 'Valide jusqu\'au '+`${year}-${month}-${day}`;
 
-            expiryInput.value = futureDate;
+            expiryInput.value =`${year}-${month}-${day}`;
             expiryText.textContent = futureDate;
         };
         
