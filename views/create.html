@@ -139,6 +139,7 @@
         let holdInterval;
 
         function updateText(id, value) {
+            if (id === "gifter") value = 'Offert par '+ value;
             document.getElementById(id).textContent = value;
         }
 
