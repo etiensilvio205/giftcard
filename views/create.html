@@ -79,28 +79,28 @@
     <div class="card-container" id="giftCard">
         <div class="card">
             <img src="background2.jpg" id="cardImage">
-            <p id="receiver" class="text" style="top: 30%; left: 50%; transform: translate(-50%, -50%);">Receiver</p>
-            <p id="gifter" class="text" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">Gifter</p>
-            <p id="expiry" class="text" style="top: 70%; left: 50%; transform: translate(-50%, -50%);">Expiry Date</p>
+            <p id="receiver" class="text" style="top: 40%; left: 50%; transform: translate(-50%, -50%);"></p>
+            <p id="gifter" class="text" style="top: 85%; left: 50%; transform: translate(-50%, -50%);"></p>
+            <p id="expiry" class="text" style="top: 90%; left: 50%; transform: translate(-50%, -50%);"></p>
         </div>
     </div>
     <div class="controls">
         <div class="control-group">
-            <input type="text" id="receiverInput" placeholder="Receiver" oninput="updateText('receiver', this.value)">
+            <input type="text" id="receiverInput" placeholder="Invité(e)" oninput="updateText('receiver', this.value)">
             <button onclick="adjustText('receiver', 'grow')">+</button>
             <button onclick="adjustText('receiver', 'shrink')">-</button>
             <button onclick="adjustText('receiver', 'up')">⬆</button>
             <button onclick="adjustText('receiver', 'down')">⬇</button>
         </div>
         <div class="control-group">
-            <input type="text" id="gifterInput" placeholder="Gifter" oninput="updateText('gifter', this.value)">
+            <input type="text" id="gifterInput" placeholder="Conseiller" oninput="updateText('gifter', this.value)">
             <button onclick="adjustText('gifter', 'grow')">+</button>
             <button onclick="adjustText('gifter', 'shrink')">-</button>
             <button onclick="adjustText('gifter', 'up')">⬆</button>
             <button onclick="adjustText('gifter', 'down')">⬇</button>
         </div>
         <div class="control-group">
-            <input type="text" id="expiryInput" placeholder="Expiry Date" oninput="updateText('expiry', this.value)">
+            <input type="text" id="expiryInput" placeholder="Date d'expiration" oninput="updateText('expiry', this.value)">
             <button onclick="adjustText('expiry', 'grow')">+</button>
             <button onclick="adjustText('expiry', 'shrink')">-</button>
             <button onclick="adjustText('expiry', 'up')">⬆</button>
