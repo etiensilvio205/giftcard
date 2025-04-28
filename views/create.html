@@ -117,7 +117,8 @@
                 ontouchstart="startAdjusting('gifter', 'down')" ontouchend="stopAdjusting()">⬇</button>
         </div>
         <div class="control-group">
-            <input type="text" id="expiryInput" placeholder="Date d'expiration" oninput="updateText('expiry', this.value)">
+        
+            <input type="date" id="expiryInput" placeholder="Date d'expiration" oninput="updateText('expiry', this.value)">
             <button 
                 onmousedown="startAdjusting('expiry', 'grow')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
                 ontouchstart="startAdjusting('expiry', 'grow')" ontouchend="stopAdjusting()">+</button>
@@ -138,8 +139,26 @@
     <script>
         let holdInterval;
 
+        window.onload = function() {
+            const expiryInput = document.getElementById('expiryInput');
+            const expiryText = document.getElementById('expiry');
+
+            let today = new Date();
+            today.setDate(today.getDate() + 15);
+
+            let year = today.getFullYear();
+            let month = String(today.getMonth() + 1).padStart(2, '0');
+            let day = String(today.getDate()).padStart(2, '0');
+
+            let futureDate = `${year}-${month}-${day}`;
+
+            expiryInput.value = futureDate;
+            expiryText.textContent = futureDate;
+        };
+        
         function updateText(id, value) {
             if (id === "gifter") value = 'Offert par '+ value;
+            if (id === "expiry") value = 'Valide jusqu\'au '+ value;
             document.getElementById(id).textContent = value;
         }
 
