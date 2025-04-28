@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Gift Card Generator</title>
     <style>
         body {
@@ -69,6 +69,7 @@
             color: white;
             font-weight: bold;
             transition: background 0.3s;
+            touch-action: manipulation; /* prevent delay on mobile */
         }
         button:hover {
             background-color: #0056b3;
@@ -79,7 +80,7 @@
     <div class="card-container" id="giftCard">
         <div class="card">
             <img src="background2.jpg" id="cardImage">
-            <p id="receiver" class="text" style="top: 40%; left: 50%; transform: translate(-50%, -50%);"></p>
+            <p id="receiver" class="text" style="top: 35%; left: 50%; transform: translate(-50%, -50%);"></p>
             <p id="gifter" class="text" style="top: 85%; left: 50%; transform: translate(-50%, -50%);"></p>
             <p id="expiry" class="text" style="top: 90%; left: 50%; transform: translate(-50%, -50%);"></p>
         </div>
@@ -87,32 +88,60 @@
     <div class="controls">
         <div class="control-group">
             <input type="text" id="receiverInput" placeholder="Invité(e)" oninput="updateText('receiver', this.value)">
-            <button onclick="adjustText('receiver', 'grow')">+</button>
-            <button onclick="adjustText('receiver', 'shrink')">-</button>
-            <button onclick="adjustText('receiver', 'up')">⬆</button>
-            <button onclick="adjustText('receiver', 'down')">⬇</button>
+            <button 
+                onmousedown="startAdjusting('receiver', 'grow')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('receiver', 'grow')" ontouchend="stopAdjusting()">+</button>
+            <button 
+                onmousedown="startAdjusting('receiver', 'shrink')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('receiver', 'shrink')" ontouchend="stopAdjusting()">-</button>
+            <button 
+                onmousedown="startAdjusting('receiver', 'up')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('receiver', 'up')" ontouchend="stopAdjusting()">⬆</button>
+            <button 
+                onmousedown="startAdjusting('receiver', 'down')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('receiver', 'down')" ontouchend="stopAdjusting()">⬇</button>
         </div>
         <div class="control-group">
             <input type="text" id="gifterInput" placeholder="Conseiller" oninput="updateText('gifter', this.value)">
-            <button onclick="adjustText('gifter', 'grow')">+</button>
-            <button onclick="adjustText('gifter', 'shrink')">-</button>
-            <button onclick="adjustText('gifter', 'up')">⬆</button>
-            <button onclick="adjustText('gifter', 'down')">⬇</button>
+            <button 
+                onmousedown="startAdjusting('gifter', 'grow')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('gifter', 'grow')" ontouchend="stopAdjusting()">+</button>
+            <button 
+                onmousedown="startAdjusting('gifter', 'shrink')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('gifter', 'shrink')" ontouchend="stopAdjusting()">-</button>
+            <button 
+                onmousedown="startAdjusting('gifter', 'up')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('gifter', 'up')" ontouchend="stopAdjusting()">⬆</button>
+            <button 
+                onmousedown="startAdjusting('gifter', 'down')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('gifter', 'down')" ontouchend="stopAdjusting()">⬇</button>
         </div>
         <div class="control-group">
             <input type="text" id="expiryInput" placeholder="Date d'expiration" oninput="updateText('expiry', this.value)">
-            <button onclick="adjustText('expiry', 'grow')">+</button>
-            <button onclick="adjustText('expiry', 'shrink')">-</button>
-            <button onclick="adjustText('expiry', 'up')">⬆</button>
-            <button onclick="adjustText('expiry', 'down')">⬇</button>
+            <button 
+                onmousedown="startAdjusting('expiry', 'grow')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('expiry', 'grow')" ontouchend="stopAdjusting()">+</button>
+            <button 
+                onmousedown="startAdjusting('expiry', 'shrink')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('expiry', 'shrink')" ontouchend="stopAdjusting()">-</button>
+            <button 
+                onmousedown="startAdjusting('expiry', 'up')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('expiry', 'up')" ontouchend="stopAdjusting()">⬆</button>
+            <button 
+                onmousedown="startAdjusting('expiry', 'down')" onmouseup="stopAdjusting()" onmouseleave="stopAdjusting()" 
+                ontouchstart="startAdjusting('expiry', 'down')" ontouchend="stopAdjusting()">⬇</button>
         </div>
         <button onclick="shareCard()" style="margin-top: 10px; width: 100%;">Share</button>
     </div>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script>
+        let holdInterval;
+
         function updateText(id, value) {
             document.getElementById(id).textContent = value;
         }
+
         function adjustText(id, type) {
             let element = document.getElementById(id);
             let style = window.getComputedStyle(element);
@@ -123,6 +152,16 @@
             if (type === "up") element.style.top = (top - 1) + "%";
             if (type === "down") element.style.top = (top + 1) + "%";
         }
+
+        function startAdjusting(id, type) {
+            adjustText(id, type);
+            holdInterval = setInterval(() => adjustText(id, type), 100); // every 100ms
+        }
+
+        function stopAdjusting() {
+            clearInterval(holdInterval);
+        }
+
         function shareCard() {
             const card = document.getElementById('giftCard');
             const img = document.getElementById('cardImage');
